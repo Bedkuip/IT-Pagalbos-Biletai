@@ -1,3 +1,4 @@
+<?php
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\WorkplaceController;
 use App\Http\Controllers\DeviceController;
@@ -11,6 +12,10 @@ Route::prefix('v1')->group(function () {
     Route::get('/me', [AuthController::class, 'me']);
     Route::put('/me', [AuthController::class, 'update']);
   });
+
+Route::get('/ping', function () {
+    return response()->json(['pong' => true]);
+});
 
   // Protected CRUD
   Route::middleware('auth:sanctum')->group(function () {
