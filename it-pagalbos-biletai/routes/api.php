@@ -1,5 +1,6 @@
 <?php
 
+use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\WorkplaceController;
 use App\Http\Controllers\DeviceController;
 use App\Http\Controllers\TicketController;
@@ -14,6 +15,8 @@ Route::prefix('v1')->group(function () {
     Route::apiResource('workplaces', WorkplaceController::class);
     Route::apiResource('devices', DeviceController::class);
     Route::apiResource('tickets', TicketController::class);
+    Route::get('/test', fn() => 'works');
+
 });
 
 /*
