@@ -1,0 +1,11 @@
+INSERT INTO workplaces (name,email,role) VALUES
+('Faculty of IT','it@university.lt','admin'),
+('Library','library@university.lt','user');
+
+INSERT INTO devices (workplace_id,type,status,serial) VALUES
+(1,'pc','active','PC-12345'),
+(2,'printer','maintenance','PR-67890');
+
+INSERT INTO tickets (workplace_id,device_id,status,assigned_specialist,priority,description) VALUES
+(1,1,'open','Jonas','high','PC does not boot'),
+(2,2,'in_progress','Petras','medium','Printer jammed');
