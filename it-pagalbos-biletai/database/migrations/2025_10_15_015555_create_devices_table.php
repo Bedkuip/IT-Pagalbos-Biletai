@@ -13,6 +13,10 @@ return new class extends Migration
     {
         Schema::create('devices', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('workplace_id')->constrained()->cascadeOnDelete();
+            $table->enum('type', ['pc','printer','network','other'])->index();
+            $table->enum('status', ['active','inactive','maintenance'])->index();
+            $table->string('serial')->nullable()->index();
             $table->timestamps();
         });
     }

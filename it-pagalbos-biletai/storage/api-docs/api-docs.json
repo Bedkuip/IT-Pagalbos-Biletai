@@ -1,0 +1,659 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+        "title": "IT Pagalbos Biletai API",
+        "description": "REST API for workplaces, devices, and tickets",
+        "version": "1.0.0"
+    },
+    "servers": [
+        {
+            "url": "http://127.0.0.1:8000/api/v1",
+            "description": "Local development server"
+        }
+    ],
+    "paths": {
+        "/api/v1/devices": {
+            "get": {
+                "tags": [
+                    "Devices"
+                ],
+                "summary": "List all devices (with optional filters)",
+                "operationId": "3c61e6c1cd697bc8a6d85415c7d9567c",
+                "parameters": [
+                    {
+                        "name": "type",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "string",
+                            "enum": [
+                                "pc",
+                                "printer",
+                                "network",
+                                "other"
+                            ]
+                        }
+                    },
+                    {
+                        "name": "status",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "string",
+                            "enum": [
+                                "active",
+                                "inactive",
+                                "maintenance"
+                            ]
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful list"
+                    }
+                }
+            },
+            "post": {
+                "tags": [
+                    "Devices"
+                ],
+                "summary": "Create a new device",
+                "operationId": "19839aad1adbee27ad02ff85d89b0764",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "workplace_id",
+                                    "type",
+                                    "status"
+                                ],
+                                "properties": {
+                                    "workplace_id": {
+                                        "type": "integer",
+                                        "example": 1
+                                    },
+                                    "type": {
+                                        "type": "string",
+                                        "enum": [
+                                            "pc",
+                                            "printer",
+                                            "network",
+                                            "other"
+                                        ],
+                                        "example": "pc"
+                                    },
+                                    "status": {
+                                        "type": "string",
+                                        "enum": [
+                                            "active",
+                                            "inactive",
+                                            "maintenance"
+                                        ],
+                                        "example": "active"
+                                    },
+                                    "serial": {
+                                        "type": "string",
+                                        "example": "SN-1234-XYZ"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Created"
+                    },
+                    "422": {
+                        "description": "Validation error"
+                    },
+                    "400": {
+                        "description": "Bad payload"
+                    }
+                }
+            }
+        },
+        "/api/v1/devices/{id}": {
+            "get": {
+                "tags": [
+                    "Devices"
+                ],
+                "summary": "Get a device by ID",
+                "operationId": "d86fe9541c8fba92445b60b004be2036",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Found"
+                    },
+                    "404": {
+                        "description": "Not found"
+                    }
+                }
+            },
+            "put": {
+                "tags": [
+                    "Devices"
+                ],
+                "summary": "Update a device",
+                "operationId": "51c74e084d6f2a9253840a2f561e26c6",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "type": {
+                                        "type": "string",
+                                        "enum": [
+                                            "pc",
+                                            "printer",
+                                            "network",
+                                            "other"
+                                        ]
+                                    },
+                                    "status": {
+                                        "type": "string",
+                                        "enum": [
+                                            "active",
+                                            "inactive",
+                                            "maintenance"
+                                        ]
+                                    },
+                                    "serial": {
+                                        "type": "string"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Updated"
+                    },
+                    "404": {
+                        "description": "Not found"
+                    },
+                    "422": {
+                        "description": "Validation error"
+                    }
+                }
+            },
+            "delete": {
+                "tags": [
+                    "Devices"
+                ],
+                "summary": "Delete a device",
+                "operationId": "535264e834b177341eaa5eb39b2f3874",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "Deleted"
+                    },
+                    "404": {
+                        "description": "Not found"
+                    }
+                }
+            }
+        },
+        "/api/v1/ping": {
+            "get": {
+                "tags": [
+                    "Test"
+                ],
+                "summary": "Ping endpoint",
+                "operationId": "1f904146a57ea3f4e5f47b7a919fa00f",
+                "responses": {
+                    "200": {
+                        "description": "pong"
+                    }
+                }
+            }
+        },
+        "/api/v1/tickets": {
+            "get": {
+                "tags": [
+                    "Tickets"
+                ],
+                "summary": "List all tickets (with optional filters)",
+                "operationId": "b406702bcd80642f4b5c83c1bf20105b",
+                "parameters": [
+                    {
+                        "name": "status",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "string",
+                            "enum": [
+                                "open",
+                                "in_progress",
+                                "resolved"
+                            ]
+                        }
+                    },
+                    {
+                        "name": "assigned",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful list"
+                    }
+                }
+            },
+            "post": {
+                "tags": [
+                    "Tickets"
+                ],
+                "summary": "Create a new ticket",
+                "operationId": "80fbef860b264eed3bc3ccd90d8ddc8b",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "workplace_id",
+                                    "device_id",
+                                    "status",
+                                    "priority",
+                                    "description"
+                                ],
+                                "properties": {
+                                    "workplace_id": {
+                                        "type": "integer",
+                                        "example": 1
+                                    },
+                                    "device_id": {
+                                        "type": "integer",
+                                        "example": 5
+                                    },
+                                    "status": {
+                                        "type": "string",
+                                        "enum": [
+                                            "open",
+                                            "in_progress",
+                                            "resolved"
+                                        ],
+                                        "example": "open"
+                                    },
+                                    "priority": {
+                                        "type": "string",
+                                        "enum": [
+                                            "low",
+                                            "medium",
+                                            "high"
+                                        ],
+                                        "example": "high"
+                                    },
+                                    "description": {
+                                        "type": "string",
+                                        "example": "Printer not working"
+                                    },
+                                    "assigned_specialist": {
+                                        "type": "string",
+                                        "example": "Jonas Specialist"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Created"
+                    },
+                    "422": {
+                        "description": "Validation error"
+                    },
+                    "400": {
+                        "description": "Bad payload"
+                    }
+                }
+            }
+        },
+        "/api/v1/tickets/{id}": {
+            "get": {
+                "tags": [
+                    "Tickets"
+                ],
+                "summary": "Get a ticket by ID",
+                "operationId": "596302276f442d583400ce2abf22cb00",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Found"
+                    },
+                    "404": {
+                        "description": "Not found"
+                    }
+                }
+            },
+            "put": {
+                "tags": [
+                    "Tickets"
+                ],
+                "summary": "Update a ticket",
+                "operationId": "9ee0e25559bb5e2ed095d82a6eb46755",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "status": {
+                                        "type": "string",
+                                        "enum": [
+                                            "open",
+                                            "in_progress",
+                                            "resolved"
+                                        ]
+                                    },
+                                    "priority": {
+                                        "type": "string",
+                                        "enum": [
+                                            "low",
+                                            "medium",
+                                            "high"
+                                        ]
+                                    },
+                                    "description": {
+                                        "type": "string"
+                                    },
+                                    "assigned_specialist": {
+                                        "type": "string"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Updated"
+                    },
+                    "404": {
+                        "description": "Not found"
+                    },
+                    "422": {
+                        "description": "Validation error"
+                    }
+                }
+            },
+            "delete": {
+                "tags": [
+                    "Tickets"
+                ],
+                "summary": "Delete a ticket",
+                "operationId": "388db857b94830e014d2df90e778c848",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "Deleted"
+                    },
+                    "404": {
+                        "description": "Not found"
+                    }
+                }
+            }
+        },
+        "/api/v1/workplaces": {
+            "get": {
+                "tags": [
+                    "Workplaces"
+                ],
+                "summary": "List all workplaces",
+                "operationId": "68a2bd6ec868c71bb0b19bfa6b4fd18d",
+                "responses": {
+                    "200": {
+                        "description": "Successful list"
+                    }
+                }
+            },
+            "post": {
+                "tags": [
+                    "Workplaces"
+                ],
+                "summary": "Create a new workplace",
+                "operationId": "6c010b2f839a99747a024b398f75d3d2",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "name",
+                                    "email"
+                                ],
+                                "properties": {
+                                    "name": {
+                                        "type": "string",
+                                        "example": "Faculty of IT"
+                                    },
+                                    "email": {
+                                        "type": "string",
+                                        "example": "it@university.lt"
+                                    },
+                                    "role": {
+                                        "type": "string",
+                                        "enum": [
+                                            "user",
+                                            "admin"
+                                        ],
+                                        "example": "user"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Created"
+                    },
+                    "422": {
+                        "description": "Validation error"
+                    },
+                    "400": {
+                        "description": "Bad payload"
+                    }
+                }
+            }
+        },
+        "/api/v1/workplaces/{id}": {
+            "get": {
+                "tags": [
+                    "Workplaces"
+                ],
+                "summary": "Get a workplace by ID",
+                "operationId": "79aac418bf70e9fa1ed2443c43471c9d",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Found"
+                    },
+                    "404": {
+                        "description": "Not found"
+                    }
+                }
+            },
+            "put": {
+                "tags": [
+                    "Workplaces"
+                ],
+                "summary": "Update a workplace",
+                "operationId": "1a498956fb18f50e68486822a787a295",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "name": {
+                                        "type": "string",
+                                        "example": "Updated Faculty"
+                                    },
+                                    "email": {
+                                        "type": "string",
+                                        "example": "new@university.lt"
+                                    },
+                                    "role": {
+                                        "type": "string",
+                                        "enum": [
+                                            "user",
+                                            "admin"
+                                        ],
+                                        "example": "admin"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Updated"
+                    },
+                    "404": {
+                        "description": "Not found"
+                    },
+                    "422": {
+                        "description": "Validation error"
+                    }
+                }
+            },
+            "delete": {
+                "tags": [
+                    "Workplaces"
+                ],
+                "summary": "Delete a workplace",
+                "operationId": "7ecdca8fc1e590671a99535cbc8c4f5c",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "Deleted (no content)"
+                    },
+                    "404": {
+                        "description": "Not found"
+                    }
+                }
+            }
+        }
+    },
+    "tags": [
+        {
+            "name": "Devices",
+            "description": "Devices"
+        },
+        {
+            "name": "Test",
+            "description": "Test"
+        },
+        {
+            "name": "Tickets",
+            "description": "Tickets"
+        },
+        {
+            "name": "Workplaces",
+            "description": "Workplaces"
+        }
+    ]
+}

@@ -13,6 +13,12 @@ return new class extends Migration
     {
         Schema::create('tickets', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('workplace_id')->constrained()->cascadeOnDelete();
+            $table->foreignId('device_id')->constrained()->cascadeOnDelete();
+            $table->enum('status', ['open','in_progress','resolved'])->index();
+            $table->string('assigned_specialist')->nullable()->index();
+            $table->enum('priority', ['low','medium','high'])->default('medium');
+            $table->text('description');
             $table->timestamps();
         });
     }

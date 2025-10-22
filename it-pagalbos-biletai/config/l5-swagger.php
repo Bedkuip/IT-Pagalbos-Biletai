@@ -44,7 +44,8 @@ return [
                  * Absolute paths to directory containing the swagger annotations are stored.
                  */
                 'annotations' => [
-                    base_path('app'),
+                    'C:\Users\Troli\OneDrive\Desktop\Game Git\IT-Pagalbos-Biletai\it-pagalbos-biletai\app\Swagger',
+                    'C:\Users\Troli\OneDrive\Desktop\Game Git\IT-Pagalbos-Biletai\it-pagalbos-biletai\app\Http\Controllers',
                 ],
             ],
         ],
@@ -108,16 +109,6 @@ return [
              * @link https://zircote.github.io/swagger-php/reference/processors.html
              */
             'default_processors_configuration' => [
-            /** Example */
-            /**
-             * 'operationId.hash' => true,
-             * 'pathFilter' => [
-             * 'tags' => [
-             * '/pets/',
-             * '/store/',
-             * ],
-             * ],.
-             */
             ],
 
             /**

@@ -13,8 +13,12 @@ return new class extends Migration
     {
         Schema::create('workplaces', function (Blueprint $table) {
             $table->id();
+            $table->string('name');
+            $table->string('email')->unique();
+            $table->enum('role', ['user','admin'])->default('user');
             $table->timestamps();
         });
+
     }
 
     /**

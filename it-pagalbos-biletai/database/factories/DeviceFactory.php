@@ -17,7 +17,10 @@ class DeviceFactory extends Factory
     public function definition(): array
     {
         return [
-            //
+        'workplace_id'=> \App\Models\Workplace::factory(),
+        'type'=>fake()->randomElement(['pc','printer','network','other']),
+        'status'=>fake()->randomElement(['active','inactive','maintenance']),
+        'serial'=>fake()->bothify('SN-####-????')
         ];
     }
 }

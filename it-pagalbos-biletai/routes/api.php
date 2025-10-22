@@ -17,15 +17,22 @@ Route::get('/ping', function () {
     return response()->json(['pong' => true]);
 });
 
-  // Protected CRUD
+Route::get('/ping', [PingController::class, 'ping']);
+
+ /* // Protected CRUD
   Route::middleware('auth:sanctum')->group(function () {
     Route::apiResource('workplaces', WorkplaceController::class);
     Route::apiResource('devices', DeviceController::class);
     Route::apiResource('tickets', TicketController::class);
-  });
+  });*/
 
-  // Public filtered lists for fast demo (optional)
+  // Public filtered lists for fast demo
   Route::get('tickets', [TicketController::class, 'index']);
   Route::get('devices', [DeviceController::class, 'index']);
   Route::get('workplaces', [WorkplaceController::class, 'index']);
+
+  // Public CRUD routes (no Sanctum)
+Route::apiResource('workplaces', WorkplaceController::class);
+Route::apiResource('devices', DeviceController::class);
+Route::apiResource('tickets', TicketController::class);
 });
