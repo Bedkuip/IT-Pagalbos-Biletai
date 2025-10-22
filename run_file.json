@@ -1,0 +1,136 @@
+{
+  "info": {
+    "name": "IT-Pagalbos-Biletai API",
+    "_postman_id": "12345678-abcd-efgh-ijkl-1234567890ab",
+    "description": "Postman kolekcija 1 laboratoriniam darbui – 15 API metodų (Workplaces, Devices, Tickets)",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Workplaces",
+      "item": [
+        {
+          "name": "List Workplaces",
+          "request": { "method": "GET", "url": "{{baseUrl}}/api/v1/workplaces" }
+        },
+        {
+          "name": "Create Workplace",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Faculty of IT\",\n  \"email\": \"it@university.lt\",\n  \"role\": \"admin\"\n}"
+            },
+            "url": "{{baseUrl}}/api/v1/workplaces"
+          }
+        },
+        {
+          "name": "Get Workplace by ID",
+          "request": { "method": "GET", "url": "{{baseUrl}}/api/v1/workplaces/1" }
+        },
+        {
+          "name": "Update Workplace",
+          "request": {
+            "method": "PUT",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Updated Faculty\",\n  \"email\": \"new@university.lt\",\n  \"role\": \"user\"\n}"
+            },
+            "url": "{{baseUrl}}/api/v1/workplaces/1"
+          }
+        },
+        {
+          "name": "Delete Workplace",
+          "request": { "method": "DELETE", "url": "{{baseUrl}}/api/v1/workplaces/1" }
+        }
+      ]
+    },
+    {
+      "name": "Devices",
+      "item": [
+        {
+          "name": "List Devices",
+          "request": { "method": "GET", "url": "{{baseUrl}}/api/v1/devices" }
+        },
+        {
+          "name": "Create Device",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"workplace_id\": 1,\n  \"type\": \"pc\",\n  \"status\": \"active\",\n  \"serial\": \"SN-1234-XYZ\"\n}"
+            },
+            "url": "{{baseUrl}}/api/v1/devices"
+          }
+        },
+        {
+          "name": "Get Device by ID",
+          "request": { "method": "GET", "url": "{{baseUrl}}/api/v1/devices/1" }
+        },
+        {
+          "name": "Update Device",
+          "request": {
+            "method": "PUT",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"status\": \"maintenance\",\n  \"serial\": \"SN-9999-NEW\"\n}"
+            },
+            "url": "{{baseUrl}}/api/v1/devices/1"
+          }
+        },
+        {
+          "name": "Delete Device",
+          "request": { "method": "DELETE", "url": "{{baseUrl}}/api/v1/devices/1" }
+        }
+      ]
+    },
+    {
+      "name": "Tickets",
+      "item": [
+        {
+          "name": "List Tickets",
+          "request": { "method": "GET", "url": "{{baseUrl}}/api/v1/tickets" }
+        },
+        {
+          "name": "Create Ticket",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"workplace_id\": 1,\n  \"device_id\": 1,\n  \"status\": \"open\",\n  \"priority\": \"high\",\n  \"description\": \"Printer not working\",\n  \"assigned_specialist\": \"Jonas Specialist\"\n}"
+            },
+            "url": "{{baseUrl}}/api/v1/tickets"
+          }
+        },
+        {
+          "name": "Get Ticket by ID",
+          "request": { "method": "GET", "url": "{{baseUrl}}/api/v1/tickets/1" }
+        },
+        {
+          "name": "Update Ticket",
+          "request": {
+            "method": "PUT",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"status\": \"in_progress\",\n  \"priority\": \"medium\",\n  \"description\": \"Replaced toner\",\n  \"assigned_specialist\": \"Petras Admin\"\n}"
+            },
+            "url": "{{baseUrl}}/api/v1/tickets/1"
+          }
+        },
+        {
+          "name": "Delete Ticket",
+          "request": { "method": "DELETE", "url": "{{baseUrl}}/api/v1/tickets/1" }
+        }
+      ]
+    }
+  ],
+  "variable": [
+    { "key": "baseUrl", "value": "http://127.0.0.1:8000" }
+  ]
+}

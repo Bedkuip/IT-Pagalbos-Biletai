@@ -8,14 +8,21 @@ use OpenApi\Annotations as OA;
 
 class TicketController extends Controller
 {
-        /**
+    /**
      * @OA\Get(
      *   path="/api/v1/tickets",
      *   tags={"Tickets"},
      *   summary="List all tickets (with optional filters)",
      *   @OA\Parameter(name="status", in="query", required=false, @OA\Schema(type="string", enum={"open","in_progress","resolved"})),
      *   @OA\Parameter(name="assigned", in="query", required=false, @OA\Schema(type="string")),
-     *   @OA\Response(response=200, description="Successful list")
+     *   @OA\Response(
+     *     response=200,
+     *     description="Successful list",
+     *     @OA\JsonContent(
+     *       type="array",
+     *       @OA\Items(ref="#/components/schemas/Ticket")
+     *     )
+     *   )
      * )
      */
     public function index(Request $r) {
@@ -37,17 +44,13 @@ class TicketController extends Controller
      *   summary="Create a new ticket",
      *   @OA\RequestBody(
      *     required=true,
-     *     @OA\JsonContent(
-     *       required={"workplace_id","device_id","status","priority","description"},
-     *       @OA\Property(property="workplace_id", type="integer", example=1),
-     *       @OA\Property(property="device_id", type="integer", example=5),
-     *       @OA\Property(property="status", type="string", enum={"open","in_progress","resolved"}, example="open"),
-     *       @OA\Property(property="priority", type="string", enum={"low","medium","high"}, example="high"),
-     *       @OA\Property(property="description", type="string", example="Printer not working"),
-     *       @OA\Property(property="assigned_specialist", type="string", example="Jonas Specialist")
-     *     )
+     *     @OA\JsonContent(ref="#/components/schemas/Ticket")
      *   ),
-     *   @OA\Response(response=201, description="Created"),
+     *   @OA\Response(
+     *     response=201,
+     *     description="Created",
+     *     @OA\JsonContent(ref="#/components/schemas/Ticket")
+     *   ),
      *   @OA\Response(response=422, description="Validation error"),
      *   @OA\Response(response=400, description="Bad payload")
      * )
@@ -71,7 +74,11 @@ class TicketController extends Controller
      *   tags={"Tickets"},
      *   summary="Get a ticket by ID",
      *   @OA\Parameter(name="id", in="path", required=true, @OA\Schema(type="integer")),
-     *   @OA\Response(response=200, description="Found"),
+     *   @OA\Response(
+     *     response=200,
+     *     description="Found",
+     *     @OA\JsonContent(ref="#/components/schemas/Ticket")
+     *   ),
      *   @OA\Response(response=404, description="Not found")
      * )
      */
@@ -93,14 +100,13 @@ class TicketController extends Controller
      *   @OA\Parameter(name="id", in="path", required=true, @OA\Schema(type="integer")),
      *   @OA\RequestBody(
      *     required=true,
-     *     @OA\JsonContent(
-     *       @OA\Property(property="status", type="string", enum={"open","in_progress","resolved"}),
-     *       @OA\Property(property="priority", type="string", enum={"low","medium","high"}),
-     *       @OA\Property(property="description", type="string"),
-     *       @OA\Property(property="assigned_specialist", type="string")
-     *     )
+     *     @OA\JsonContent(ref="#/components/schemas/Ticket")
      *   ),
-     *   @OA\Response(response=200, description="Updated"),
+     *   @OA\Response(
+     *     response=200,
+     *     description="Updated",
+     *     @OA\JsonContent(ref="#/components/schemas/Ticket")
+     *   ),
      *   @OA\Response(response=404, description="Not found"),
      *   @OA\Response(response=422, description="Validation error")
      * )
@@ -118,7 +124,7 @@ class TicketController extends Controller
      *   tags={"Tickets"},
      *   summary="Delete a ticket",
      *   @OA\Parameter(name="id", in="path", required=true, @OA\Schema(type="integer")),
-     *   @OA\Response(response=204, description="Deleted"),
+     *   @OA\Response(response=204, description="Deleted (no content)"),
      *   @OA\Response(response=404, description="Not found")
      * )
      */

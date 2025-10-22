@@ -1,4 +1,22 @@
 <?php
+
+use App\Http\Controllers\WorkplaceController;
+use App\Http\Controllers\DeviceController;
+use App\Http\Controllers\TicketController;
+
+Route::prefix('v1')->group(function () {
+    // Paprastas ping testas
+    Route::get('/ping', function () {
+        return response()->json(['pong' => true]);
+    });
+
+    // CRUD resursai
+    Route::apiResource('workplaces', WorkplaceController::class);
+    Route::apiResource('devices', DeviceController::class);
+    Route::apiResource('tickets', TicketController::class);
+});
+
+/*
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\WorkplaceController;
 use App\Http\Controllers\DeviceController;
@@ -19,12 +37,12 @@ Route::get('/ping', function () {
 
 Route::get('/ping', [PingController::class, 'ping']);
 
- /* // Protected CRUD
+  // Protected CRUD
   Route::middleware('auth:sanctum')->group(function () {
     Route::apiResource('workplaces', WorkplaceController::class);
     Route::apiResource('devices', DeviceController::class);
     Route::apiResource('tickets', TicketController::class);
-  });*/
+  });
 
   // Public filtered lists for fast demo
   Route::get('tickets', [TicketController::class, 'index']);
@@ -36,3 +54,4 @@ Route::apiResource('workplaces', WorkplaceController::class);
 Route::apiResource('devices', DeviceController::class);
 Route::apiResource('tickets', TicketController::class);
 });
+*/

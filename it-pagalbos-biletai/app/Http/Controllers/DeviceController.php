@@ -15,7 +15,14 @@ class DeviceController extends Controller
      *   summary="List all devices (with optional filters)",
      *   @OA\Parameter(name="type", in="query", required=false, @OA\Schema(type="string", enum={"pc","printer","network","other"})),
      *   @OA\Parameter(name="status", in="query", required=false, @OA\Schema(type="string", enum={"active","inactive","maintenance"})),
-     *   @OA\Response(response=200, description="Successful list")
+     *   @OA\Response(
+     *     response=200,
+     *     description="Successful list",
+     *     @OA\JsonContent(
+     *       type="array",
+     *       @OA\Items(ref="#/components/schemas/Device")
+     *     )
+     *   )
      * )
      */
     public function index(Request $r) {
@@ -37,15 +44,13 @@ class DeviceController extends Controller
      *   summary="Create a new device",
      *   @OA\RequestBody(
      *     required=true,
-     *     @OA\JsonContent(
-     *       required={"workplace_id","type","status"},
-     *       @OA\Property(property="workplace_id", type="integer", example=1),
-     *       @OA\Property(property="type", type="string", enum={"pc","printer","network","other"}, example="pc"),
-     *       @OA\Property(property="status", type="string", enum={"active","inactive","maintenance"}, example="active"),
-     *       @OA\Property(property="serial", type="string", example="SN-1234-XYZ")
-     *     )
+     *     @OA\JsonContent(ref="#/components/schemas/Device")
      *   ),
-     *   @OA\Response(response=201, description="Created"),
+     *   @OA\Response(
+     *     response=201,
+     *     description="Created",
+     *     @OA\JsonContent(ref="#/components/schemas/Device")
+     *   ),
      *   @OA\Response(response=422, description="Validation error"),
      *   @OA\Response(response=400, description="Bad payload")
      * )
@@ -67,7 +72,11 @@ class DeviceController extends Controller
      *   tags={"Devices"},
      *   summary="Get a device by ID",
      *   @OA\Parameter(name="id", in="path", required=true, @OA\Schema(type="integer")),
-     *   @OA\Response(response=200, description="Found"),
+     *   @OA\Response(
+     *     response=200,
+     *     description="Found",
+     *     @OA\JsonContent(ref="#/components/schemas/Device")
+     *   ),
      *   @OA\Response(response=404, description="Not found")
      * )
      */
@@ -90,13 +99,13 @@ class DeviceController extends Controller
      *   @OA\Parameter(name="id", in="path", required=true, @OA\Schema(type="integer")),
      *   @OA\RequestBody(
      *     required=true,
-     *     @OA\JsonContent(
-     *       @OA\Property(property="type", type="string", enum={"pc","printer","network","other"}),
-     *       @OA\Property(property="status", type="string", enum={"active","inactive","maintenance"}),
-     *       @OA\Property(property="serial", type="string")
-     *     )
+     *     @OA\JsonContent(ref="#/components/schemas/Device")
      *   ),
-     *   @OA\Response(response=200, description="Updated"),
+     *   @OA\Response(
+     *     response=200,
+     *     description="Updated",
+     *     @OA\JsonContent(ref="#/components/schemas/Device")
+     *   ),
      *   @OA\Response(response=404, description="Not found"),
      *   @OA\Response(response=422, description="Validation error")
      * )
@@ -115,7 +124,7 @@ class DeviceController extends Controller
      *   tags={"Devices"},
      *   summary="Delete a device",
      *   @OA\Parameter(name="id", in="path", required=true, @OA\Schema(type="integer")),
-     *   @OA\Response(response=204, description="Deleted"),
+     *   @OA\Response(response=204, description="Deleted (no content)"),
      *   @OA\Response(response=404, description="Not found")
      * )
      */
