@@ -26,4 +26,11 @@ Kai resursas sukuriamas - 201
 Kai resursas ištrinamas - 200/204 priklausomai, ar grąžinamas response body
 Projekto kodas turi būti laikomas Git saugykloje (github, bitbucket, gitlab ar kt.). Dokumentacija - projektui sukurtame wiki arba projekto kodo Git saugykloje (.readme).
 
+<<<<<<< Updated upstream
 API realizuotas per 5 * 3 CRUD metodus. Pagal nurodytus parametrus pateikiamas atitinkamas grazinimo kodas. Duombazeje po 2 testinius elementus kiekvienai klasei. Postman paruostas su .json failu. OpenAPI dokumentacija pasiekiama per /api/documentation, API pasiekiami per /api/v1/{class}
+=======
+Reikalavimai 2 laboratorinam darbui
+Realizuotas produktas turi būti pasiekiamas saityne, tam panaudojant debesų technologijas (AWS, Azure, Google Cloud ir kt.);
+Turi būti realizuota autentifikacja ir autorizacija naudojant OAuth2 arba JWT technologinius sprendimus. Naudotojo rolė turi būti saugoma žetono (token) viduje.  
+Projekto kodas turi būti laikomas Git saugykloje (github, bitbucket, gitlab ar kt.). Dokumentacija - projektui sukurtame wiki arba projekto kodo Git saugykloje (.readme).
+>>>>>>> Stashed changes
