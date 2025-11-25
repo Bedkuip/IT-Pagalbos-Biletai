@@ -5,6 +5,11 @@ use App\Http\Controllers\WorkplaceController;
 use App\Http\Controllers\DeviceController;
 use App\Http\Controllers\TicketController;
 
+Route::post('/auth/login', [AuthController::class, 'login']);
+Route::post('/auth/refresh', [AuthController::class, 'refresh']);
+Route::post('/auth/logout', [AuthController::class, 'logout']);
+
+
 Route::prefix('v1')->group(function () {
     // Paprastas ping testas
     Route::get('/ping', function () {
