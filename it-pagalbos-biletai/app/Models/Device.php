@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 /**
@@ -21,6 +22,7 @@ use Illuminate\Database\Eloquent\Model;
  */
 class Device extends Model
 {
+    use HasFactory;
     protected $fillable = ['workplace_id','type','status','serial'];
 }
 
