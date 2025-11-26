@@ -6,6 +6,7 @@ use App\Models\User;
 use App\Models\RefreshToken;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
+use Firebase\JWT\JWT;
 
 /**
  * @OA\Tag(
@@ -40,34 +41,34 @@ class AuthController extends Controller {
      *     @OA\Response(response=401, description="Neteisingi prisijungimo duomenys")
      * )
      */
-    public function login(Request $req)
-    {
-        $user = User::where('email', $req->email)->first();
-        if (!$user || !Hash::check($req->password, $user->password)) {
-            return response()->json(['error' => 'Invalid credentials'], 401);
-        }
-
-        $access = Jwt::encode([
-            'sub' => $user->id,
-            'role' => $user->role,
-            'exp' => now()->addMinutes(config('auth.access_ttl'))->timestamp,
-        ]);
-
-        $refreshPlain = Str::random(64);
-        RefreshToken::create([
-            'user_id' => $user->id,
-            'token_hash' => hash('sha256', $refreshPlain),
-            'expires_at' => now()->addDays(config('auth.refresh_ttl')),
-            'user_agent' => $req->userAgent(),
-            'ip' => $req->ip(),
-        ]);
-
-        return response()->json([
-            'access_token' => $access,
-            'access_expires_in' => config('auth.access_ttl') * 60,
-            'refresh_token' => $refreshPlain,
-        ]);
+public function login(Request $req)
+{
+    $user = User::where('email', $req->email)->first();
+    if (!$user || !Hash::check($req->password, $user->password)) {
+        return response()->json(['error' => 'Invalid credentials'], 401);
     }
+
+    $access = JWT::encode([
+        'sub' => $user->id,
+        'role' => $user->role,
+        'exp' => now()->addMinutes(config('auth.access_ttl'))->timestamp,
+    ], env('JWT_SECRET'), 'HS256');
+
+    $refreshPlain = Str::random(64);
+    RefreshToken::create([
+        'user_id' => $user->id,
+        'token_hash' => hash('sha256', $refreshPlain),
+        'expires_at' => now()->addDays(config('auth.refresh_ttl')),
+        'user_agent' => $req->userAgent(),
+        'ip' => $req->ip(),
+    ]);
+
+    return response()->json([
+        'access_token' => $access,
+        'access_expires_in' => config('auth.access_ttl') * 60,
+        'refresh_token' => $refreshPlain,
+    ]);
+}
 
     /**
      * @OA\Post(
@@ -109,11 +110,11 @@ class AuthController extends Controller {
 
         $user = $stored->user;
 
-        $access = Jwt::encode([
+        $access = JWT::encode([
             'sub' => $user->id,
             'role' => $user->role,
             'exp' => now()->addMinutes(config('auth.access_ttl'))->timestamp,
-        ]);
+        ], env('JWT_SECRET'), 'HS256');
 
         $newPlain = Str::random(64);
         RefreshToken::create([
