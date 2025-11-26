@@ -44,8 +44,9 @@ return [
                  * Absolute paths to directory containing the swagger annotations are stored.
                  */
                 'annotations' => [
-                    'C:\Users\Troli\OneDrive\Desktop\Game Git\IT-Pagalbos-Biletai\it-pagalbos-biletai\app\Swagger',
-                    'C:\Users\Troli\OneDrive\Desktop\Game Git\IT-Pagalbos-Biletai\it-pagalbos-biletai\app\Http\Controllers',
+                    base_path('app/Http/Controllers'),
+                    base_path('app/Models'),
+                    base_path('app/Swagger'),
                 ],
             ],
         ],
