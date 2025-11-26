@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\WorkplaceController;
 use App\Http\Controllers\DeviceController;
 use App\Http\Controllers\TicketController;
+use App\Http\Controllers\AuthController;
 
 Route::post('/auth/login', [AuthController::class, 'login']);
 Route::post('/auth/refresh', [AuthController::class, 'refresh']);
