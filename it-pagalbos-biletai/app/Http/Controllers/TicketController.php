@@ -32,6 +32,22 @@ class TicketController extends Controller
         return response()->json($q->paginate(10), 200);
     }
 
+
+    /**
+     * @OA\Get(
+     *   path="/api/v1/workplaces/{id}/tickets",
+     *   tags={"Workplaces"},
+     *   summary="Get all tickets for a workplace",
+     *   @OA\Parameter(name="id", in="path", required=true, @OA\Schema(type="integer")),
+     *   @OA\Response(response=200, description="List of tickets", @OA\JsonContent(type="array", @OA\Items(ref="#/components/schemas/Ticket")))
+     * )
+     */
+    public function ticketsByWorkplace($id) {
+        $tickets = Ticket::where('workplace_id', $id)->get();
+        return response()->json($tickets, 200);
+    }
+
+
     public function create()
     {
         //
