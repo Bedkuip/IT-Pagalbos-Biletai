@@ -41,6 +41,43 @@ class AuthController extends Controller {
      *     @OA\Response(response=401, description="Neteisingi prisijungimo duomenys")
      * )
      */
+
+
+public function login(Request $req)
+{
+    // Find user by email only
+    $user = User::where('email', $req->email)->first();
+
+    if (!$user) {
+        return response()->json(['error' => 'Invalid email'], 401);
+    }
+
+    // Generate access token
+    $access = JWT::encode([
+        'sub' => $user->id,
+        'role' => $user->role,
+        'exp' => now()->addMinutes(config('auth.access_ttl'))->timestamp,
+    ], env('JWT_SECRET'), 'HS256');
+
+    // Generate refresh token
+    $refreshPlain = Str::random(64);
+    RefreshToken::create([
+        'user_id' => $user->id,
+        'token_hash' => hash('sha256', $refreshPlain),
+        'expires_at' => now()->addDays(config('auth.refresh_ttl')),
+        'user_agent' => $req->userAgent(),
+        'ip' => $req->ip(),
+    ]);
+
+    // Return tokens
+    return response()->json([
+        'access_token' => $access,
+        'access_expires_in' => config('auth.access_ttl') * 60,
+        'refresh_token' => $refreshPlain,
+    ]);
+}
+
+/* YES PASSWORD
 public function login(Request $req)
 {
     $user = User::where('email', $req->email)->first();
@@ -68,7 +105,7 @@ public function login(Request $req)
         'access_expires_in' => config('auth.access_ttl') * 60,
         'refresh_token' => $refreshPlain,
     ]);
-}
+}*/
 
     /**
      * @OA\Post(

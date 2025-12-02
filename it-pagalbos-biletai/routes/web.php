@@ -1,14 +1,54 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+
+// Root URL → show login form
+Route::get('/', function () {
+    return view('auth.login'); // Blade login form
+});
+
+// Dashboard page (frontend view)
+Route::get('/dashboard', function () {
+    return view('dashboard');
+});
+
+/*
+use Illuminate\Support\Facades\Route;
 #use App\Http\Controllers\WorkplaceController;
 #use App\Http\Controllers\DeviceController;
 #use App\Http\Controllers\TicketController;
+use Illuminate\Support\Facades\Auth;
 
+// Root URL → Login page
+Route::get('/', function () {
+    return redirect()->route('login');
+});
+
+// Authentication routes (disable registration)
+Auth::routes(['register' => false]);
+
+// Protected routes (only accessible after login)
+Route::middleware(['auth'])->group(function () {
+    Route::get('/dashboard', function () {
+        return view('dashboard'); // create resources/views/dashboard.blade.php
+    })->name('dashboard');
+});
+*/
+/*
+Route::get('/', function () {
+    return redirect()->route('login');
+});
+Route::middleware(['auth'])->group(function () {
+    Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
+    // other protected routes...
+});
+
+*/
+/*
 Route::get('/', function () {
     return view('welcome');
 });
-
+*/
 /*
 // API maršrutai be CSRF
 Route::prefix('api/v1')
