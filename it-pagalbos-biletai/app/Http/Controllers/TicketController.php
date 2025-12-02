@@ -72,14 +72,20 @@ class TicketController extends Controller
      * )
      */
     public function store(Request $r) {
+        // Only users can create
+        if ($r->get('role') !== 'user') {
+            return response()->json(['error' => 'Forbidden'], 403);
+        }
+
         $data = $r->validate([
-    'workplace_id' => 'required|exists:workplaces,id',
-    'device_id' => 'required|exists:devices,id',
-    'status' => 'required|in:open,in_progress,resolved',
-    'priority' => 'required|in:low,medium,high',
-    'description' => 'required|min:5',
-    'assigned_specialist' => 'nullable|string'
-]);
+            'workplace_id' => 'required|exists:workplaces,id',
+            'device_id' => 'required|exists:devices,id',
+            'status' => 'required|in:open,in_progress,resolved',
+            'priority' => 'required|in:low,medium,high',
+            'description' => 'required|min:5',
+            'assigned_specialist' => 'nullable|string'
+        ]);
+
         $m = Ticket::create($data);
         return response()->json($m, 201);
     }
@@ -128,9 +134,21 @@ class TicketController extends Controller
      * )
      */
     public function update(Request $r, $id) {
+        // Only users can update
+        if ($r->get('role') !== 'user') {
+            return response()->json(['error' => 'Forbidden'], 403);
+        }
+
         $m = Ticket::find($id);
-        if(!$m) return response()->json(['error'=>'Not found'], 404);
-        $data = $r->validate([/* rules per Ticket */]);
+        if (!$m) return response()->json(['error' => 'Not found'], 404);
+
+        $data = $r->validate([
+            'status' => 'in:open,in_progress,resolved',
+            'priority' => 'in:low,medium,high',
+            'description' => 'min:5',
+            'assigned_specialist' => 'nullable|string'
+        ]);
+
         $m->update($data);
         return response()->json($m, 200);
     }
@@ -144,9 +162,15 @@ class TicketController extends Controller
      *   @OA\Response(response=404, description="Not found")
      * )
      */
-    public function destroy($id) {
+    public function destroy(Request $r, $id) {
+        // Only admins can delete
+        if ($r->get('role') !== 'admin') {
+            return response()->json(['error' => 'You Cant'], 403);
+        }
+
         $m = Ticket::find($id);
-        if(!$m) return response()->json(['error'=>'Not found'], 404);
+        if (!$m) return response()->json(['error' => 'Not found'], 404);
+
         $m->delete();
         return response()->noContent(); // 204
     }
