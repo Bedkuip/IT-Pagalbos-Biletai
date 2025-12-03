@@ -10,7 +10,7 @@ Route::get('/', function () {
 // Dashboard page (frontend view)
 Route::get('/dashboard', function () {
     return view('dashboard');
-});
+})->middleware('jwt');
 
 /*
 use Illuminate\Support\Facades\Route;

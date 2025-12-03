@@ -135,10 +135,17 @@ class TicketController extends Controller
      */
     public function update(Request $r, $id) {
         // Only users can update
+        /*
         if ($r->get('role') !== 'user') {
             return response()->json(['error' => 'Forbidden'], 403);
         }
+        */
+        \Log::info('Role found: ' . $r->attributes->get('role'));
 
+        $role = $r->attributes->get('role');
+        if ($role !== 'user') {
+            return response()->json(['error' => 'Forbidden'], 403);
+        }
         $m = Ticket::find($id);
         if (!$m) return response()->json(['error' => 'Not found'], 404);
 
