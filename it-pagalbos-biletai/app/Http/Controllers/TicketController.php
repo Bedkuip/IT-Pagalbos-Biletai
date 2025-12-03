@@ -73,7 +73,8 @@ class TicketController extends Controller
      */
     public function store(Request $r) {
         // Only users can create
-        if ($r->get('role') !== 'user') {
+        $role = $r->attributes->get('role');
+        if ($role !== 'user') {
             return response()->json(['error' => 'Forbidden'], 403);
         }
 
@@ -140,13 +141,8 @@ class TicketController extends Controller
             return response()->json(['error' => 'Forbidden'], 403);
         }
         */
-        \Log::info('Role found: ' . $r->attributes->get('role'));
 
         \Log::info('All: ' . $r);
-
-        \Log::info('Request input:', $r->all());
-
-        \Log::info('Ticket ID: ' . $id);
 
         $role = $r->attributes->get('role');
         if ($role !== 'user') {
@@ -154,6 +150,11 @@ class TicketController extends Controller
         }
         $m = Ticket::find($id);
         if (!$m) return response()->json(['error' => 'Not found'], 404);
+
+        // Block if ticket is already resolved
+        if ($m->status === 'resolved') {
+            return response()->json(['error' => 'Forbidden: ticket already resolved'], 403);
+        }
 
         $data = $r->validate([
             'status' => 'in:open,in_progress,resolved',
@@ -177,7 +178,8 @@ class TicketController extends Controller
      */
     public function destroy(Request $r, $id) {
         // Only admins can delete
-        if ($r->get('role') !== 'admin') {
+        $role = $r->attributes->get('role');
+        if ($role !== 'admin') {
             return response()->json(['error' => 'You Cant'], 403);
         }
 
