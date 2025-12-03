@@ -142,6 +142,12 @@ class TicketController extends Controller
         */
         \Log::info('Role found: ' . $r->attributes->get('role'));
 
+        \Log::info('All: ' . $r);
+
+        \Log::info('Request input:', $r->all());
+
+        \Log::info('Ticket ID: ' . $id);
+
         $role = $r->attributes->get('role');
         if ($role !== 'user') {
             return response()->json(['error' => 'Forbidden'], 403);

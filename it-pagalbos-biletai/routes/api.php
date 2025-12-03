@@ -10,20 +10,22 @@ Route::post('/auth/login', [AuthController::class, 'login']);
 Route::post('/auth/refresh', [AuthController::class, 'refresh']);
 Route::post('/auth/logout', [AuthController::class, 'logout']);
 
-
 Route::prefix('v1')->group(function () {
-    // Paprastas ping testas
+    // Simple ping test
     Route::get('/ping', function () {
         return response()->json(['pong' => true]);
     });
 
-    // CRUD resursai
-    Route::apiResource('workplaces', WorkplaceController::class);
-    Route::apiResource('devices', DeviceController::class);
-    Route::apiResource('tickets', TicketController::class);
-    Route::get('/test', fn() => 'works');
+    // Protected CRUD resources
+    Route::middleware('jwt')->group(function () {
+        Route::apiResource('workplaces', WorkplaceController::class);
+        Route::apiResource('devices', DeviceController::class);
+        Route::apiResource('tickets', TicketController::class);
+    });
 
+    Route::get('/test', fn() => 'works');
 });
+
 
 /*
 use App\Http\Controllers\AuthController;
