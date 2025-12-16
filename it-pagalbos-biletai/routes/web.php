@@ -12,6 +12,25 @@ Route::get('/dashboard', function () {
     return view('dashboard');
 });
 
+Route::get('/devices', function () {
+    return view('devices.index');
+});
+
+// Tickets list page
+Route::get('/tickets', function () {
+    return view('tickets.index');
+});
+
+// Ticket create page
+Route::get('/tickets/create', function () {
+    return view('tickets.create');
+});
+
+// Ticket edit page
+Route::get('/tickets/{id}/edit', function ($id) {
+    return view('tickets.edit', ['id' => $id]);
+});
+
 
 /*
 use Illuminate\Support\Facades\Route;
