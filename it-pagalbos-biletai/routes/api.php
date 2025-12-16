@@ -16,6 +16,16 @@ Route::prefix('v1')->group(function () {
         return response()->json(['pong' => true]);
     });
 
+    
+        // Dropdown endpoints
+    Route::get('/workplaces/all', function () {
+        return \App\Models\Workplace::all();
+    });
+
+    Route::get('/devices/all', function () {
+        return \App\Models\Device::all();
+    });
+    
     // Protected CRUD resources
     Route::middleware('jwt')->group(function () {
         Route::apiResource('workplaces', WorkplaceController::class);
@@ -23,6 +33,8 @@ Route::prefix('v1')->group(function () {
         Route::apiResource('tickets', TicketController::class);
     });
 
+
+    
     Route::get('/test', fn() => 'works');
 });
 
