@@ -79,8 +79,8 @@
                 <tbody>
                     @forelse($recentTickets ?? [] as $ticket)
                         <tr class="border-b hover:bg-gray-50 transition">
-                            <td class="py-2">{{ $ticket->title }}</td>
-                            <td class="py-2">{{ $ticket->device->name ?? '-' }}</td>
+                            <td class="py-2">{{ $ticket->device->serial }}</td>
+                            <td class="py-2">{{ $ticket->device->type ?? '-' }}</td>
                             <td class="py-2">
                                 <span class="px-2 py-1 rounded text-white text-xs
                                     @if($ticket->status === 'pending') bg-yellow-500
