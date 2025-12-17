@@ -6,7 +6,9 @@
     <!-- Puslapio antraštė -->
     <div class="mb-6">
         <h1 class="text-2xl font-semibold text-gray-800">Pagrindinis skydelis</h1>
-        <p class="text-gray-500 text-sm">Sveiki sugrįžę, {{ auth()->user()->name ?? 'Vartotojau' }}.</p>
+        <p class="text-gray-500 text-sm">
+            Sveiki sugrįžę, <span id="username">Vartotojau</span>.
+        </p>
     </div>
 
     <!-- Statistinės kortelės -->
@@ -112,10 +114,24 @@
 </div>
 
 <script>
+    // 1) Apsauga: jei nėra JWT → redirect į login
+    if (!localStorage.getItem('access_token')) {
+        window.location.href = '/';
+    }
+
+    // 2) Įrašyti vartotojo vardą iš localStorage
+    document.addEventListener('DOMContentLoaded', () => {
+        const name = localStorage.getItem('user_name');
+        if (name) {
+            document.getElementById('username').textContent = name;
+        }
+    });
+
+    // 3) Logout logika
     document.getElementById('logout-btn').addEventListener('click', async function() {
         const refresh = localStorage.getItem('refresh_token');
 
-        await fetch('/auth/logout', {
+        await fetch('/api/auth/logout', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',

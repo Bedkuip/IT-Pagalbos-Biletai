@@ -1,35 +1,29 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Models\Workplace;
+use App\Http\Controllers\DashboardController;
 
-// Root URL → show login form
+// Login page
 Route::get('/', function () {
-    return view('auth.login'); // Blade login form
-});
+    return view('auth.login');
+})->name('login');
 
-// Dashboard page (frontend view)
-Route::get('/dashboard', function () {
-    return view('dashboard');
-});
-
-Route::get('/devices', function () {
-    return view('devices.index');
-});
-
-// Tickets list page
+// Tickets page (su workplaces)
 Route::get('/tickets', function () {
-    return view('tickets.index');
+    return view('tickets.index', [
+        'workplaces' => Workplace::all()
+    ]);
 });
 
-// Ticket create page
-Route::get('/tickets/create', function () {
-    return view('tickets.create');
-});
+// Kiti puslapiai
+Route::get('/dashboard', [DashboardController::class, 'index']);
+Route::get('/devices', fn() => view('devices.index'));
+Route::get('/tickets/create', fn() => view('tickets.create'));
+Route::get('/tickets/{id}/edit', fn($id) => view('tickets.edit', ['id' => $id]));
 
-// Ticket edit page
-Route::get('/tickets/{id}/edit', function ($id) {
-    return view('tickets.edit', ['id' => $id]);
-});
+
+
 
 
 /*

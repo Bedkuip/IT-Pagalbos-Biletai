@@ -79,10 +79,10 @@ async function apiFetch(url, options = {}) {
 
 // Load workplaces and devices
 async function loadSelects() {
-    const w = await apiFetch('/api/v1/workplaces');
+    const w = await apiFetch('/api/v1/workplaces/all');
     const workplaces = await w.json();
 
-    const d = await apiFetch('/api/v1/devices');
+    const d = await apiFetch('/api/v1/devices/all');
     const devices = await d.json();
 
     const wSelect = document.getElementById('workplace_id');

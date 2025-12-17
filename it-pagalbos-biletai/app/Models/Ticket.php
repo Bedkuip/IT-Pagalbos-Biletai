@@ -29,4 +29,9 @@ class Ticket extends Model
     protected $fillable = [
         'workplace_id','device_id','status','priority','description','assigned_specialist'
     ];
+
+    public function device()
+    {
+        return $this->belongsTo(Device::class);
+    }
 }

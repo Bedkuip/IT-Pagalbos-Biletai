@@ -8,14 +8,15 @@
         <h1 class="text-2xl font-semibold text-gray-800">Bilietai</h1>
 
         <a href="/tickets/create"
-           class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg shadow transition flex items-center gap-2">
+        id="create-ticket-btn"
+        class="hidden bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg shadow transition flex items-center gap-2">
             <i class="fa-solid fa-plus"></i> Naujas bilietas
         </a>
     </div>
 
     <!-- Filtrai -->
     <div class="bg-white shadow-md rounded-xl p-4 mb-6">
-        <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+        <div class="grid grid-cols-1 sm:grid-cols-4 gap-4">
 
             <div>
                 <label class="text-sm text-gray-600">Statusas</label>
@@ -40,6 +41,17 @@
                 <input id="filter-type" type="text"
                        class="w-full border border-gray-300 rounded-lg px-3 py-2"
                        placeholder="Pvz. printer">
+            </div>
+
+            <div>
+                <label class="text-sm text-gray-600">Darbovietė</label>
+                <select id="filter-workplace"
+                        class="w-full border border-gray-300 rounded-lg px-3 py-2">
+                    <option value="">Visos</option>
+                    @foreach($workplaces as $w)
+                        <option value="{{ $w->id }}">{{ $w->name }}</option>
+                    @endforeach
+                </select>
             </div>
 
         </div>
@@ -110,8 +122,17 @@ async function loadTickets(page = 1) {
     const status = document.getElementById('filter-status').value;
     const specialist = document.getElementById('filter-specialist').value;
     const type = document.getElementById('filter-type').value;
+    const workplace = document.getElementById('filter-workplace').value;
 
-    let url = `/api/v1/tickets?page=${page}`;
+    let url;
+
+    // Jei pasirinkta darbovietė → naudoti tavo API metodą
+    if (workplace) {
+        url = `/api/v1/workplaces/${workplace}/tickets?page=${page}`;
+    } else {
+        url = `/api/v1/tickets?page=${page}`;
+    }
+
     if (status) url += `&status=${status}`;
     if (specialist) url += `&assigned_specialist=${specialist}`;
     if (type) url += `&type=${type}`;
@@ -122,7 +143,7 @@ async function loadTickets(page = 1) {
     const tbody = document.getElementById('tickets-body');
     tbody.innerHTML = '';
 
-    data.data.forEach(t => {
+    data.data?.forEach(t => {
         tbody.innerHTML += `
             <tr class="border-b hover:bg-gray-50 transition">
                 <td class="py-2">${t.id}</td>
@@ -131,9 +152,21 @@ async function loadTickets(page = 1) {
                 <td class="py-2">${t.status}</td>
                 <td class="py-2">${t.priority}</td>
                 <td class="py-2">${t.created_at}</td>
-                <td class="py-2 flex gap-2">
+
+                <td class="py-2 flex gap-3">
+
+                    <!-- Peržiūrėti (visi gali) -->
                     <button onclick="viewTicket(${t.id})"
                             class="text-blue-600 hover:underline">Peržiūrėti</button>
+                    <!-- Redaguoti -->
+                    <a href="/tickets/${t.id}/edit"
+                    class="text-green-600 hover:underline hidden"
+                    data-role="user">Redaguoti</a>
+
+                    <!-- Trinti -->
+                    <button onclick="deleteTicket(${t.id})"
+                            class="text-red-600 hover:underline hidden"
+                            data-role="admin">Trinti</button>
                 </td>
             </tr>
         `;
@@ -143,13 +176,15 @@ async function loadTickets(page = 1) {
     const pag = document.getElementById('pagination');
     pag.innerHTML = '';
 
-    for (let i = 1; i <= data.last_page; i++) {
-        pag.innerHTML += `
-            <button onclick="loadTickets(${i})"
-                    class="px-3 py-1 rounded ${i === data.current_page ? 'bg-blue-600 text-white' : 'bg-gray-200'}">
-                ${i}
-            </button>
-        `;
+    if (data.last_page) {
+        for (let i = 1; i <= data.last_page; i++) {
+            pag.innerHTML += `
+                <button onclick="loadTickets(${i})"
+                        class="px-3 py-1 rounded ${i === data.current_page ? 'bg-blue-600 text-white' : 'bg-gray-200'}">
+                    ${i}
+                </button>
+            `;
+        }
     }
 }
 
@@ -173,6 +208,21 @@ async function viewTicket(id) {
     `;
 }
 
+// Delete (tik admin)
+async function deleteTicket(id) {
+    if (!confirm("Ar tikrai norite ištrinti šį bilietą?")) return;
+
+    const res = await apiFetch(`/api/v1/tickets/${id}`, {
+        method: 'DELETE'
+    });
+
+    if (res.ok) {
+        loadTickets();
+    } else {
+        alert("Nepavyko ištrinti bilieto.");
+    }
+}
+
 document.getElementById('modal-close').onclick = () =>
     document.getElementById('ticket-modal').classList.add('hidden');
 
@@ -180,5 +230,14 @@ document.getElementById('apply-filters').onclick = () => loadTickets();
 
 loadTickets();
 </script>
+
+<script>
+const role = localStorage.getItem('user_role');
+
+if (role === 'user' || role === 'admin') {
+    document.getElementById('create-ticket-btn').classList.remove('hidden');
+}
+</script>
+
 
 @endsection
