@@ -158,15 +158,11 @@ async function loadTickets(page = 1) {
                     <!-- Peržiūrėti (visi gali) -->
                     <button onclick="viewTicket(${t.id})"
                             class="text-blue-600 hover:underline">Peržiūrėti</button>
-                    <!-- Redaguoti -->
                     <a href="/tickets/${t.id}/edit"
-                    class="text-green-600 hover:underline hidden"
-                    data-role="user">Redaguoti</a>
+                    class="text-green-600 hover:underline">Redaguoti</a>
 
-                    <!-- Trinti -->
                     <button onclick="deleteTicket(${t.id})"
-                            class="text-red-600 hover:underline hidden"
-                            data-role="admin">Trinti</button>
+                            class="text-red-600 hover:underline">Trinti</button>
                 </td>
             </tr>
         `;

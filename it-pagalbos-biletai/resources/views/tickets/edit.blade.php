@@ -3,10 +3,10 @@
 @section('content')
 <div class="max-w-3xl mx-auto px-4 py-6">
 
-    <h1 class="text-2xl font-semibold mb-6">Naujas bilietas</h1>
+    <h1 class="text-2xl font-semibold mb-6">Redaguoti bilietą</h1>
 
     <div class="bg-white shadow-md rounded-xl p-6">
-        <form id="create-ticket-form" class="space-y-5">
+        <form id="edit-ticket-form" class="space-y-5">
 
             <div>
                 <label class="block text-sm text-gray-600 mb-1">Darbovietė</label>
@@ -58,7 +58,7 @@
 
             <button type="submit"
                     class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg shadow transition">
-                Sukurti bilietą
+                Išsaugoti pakeitimus
             </button>
 
         </form>
@@ -77,12 +77,15 @@ async function apiFetch(url, options = {}) {
     return fetch(url, options);
 }
 
-// Load workplaces and devices
-async function loadSelects() {
-    const w = await apiFetch('/api/v1/workplaces');
+const ticketId = {{ $id }};
+
+// Load workplaces, devices, and ticket data
+async function loadData() {
+    // 1. Load dropdown data
+    const w = await apiFetch('/api/v1/workplaces/all');
     const workplaces = await w.json();
 
-    const d = await apiFetch('/api/v1/devices');
+    const d = await apiFetch('/api/v1/devices/all');
     const devices = await d.json();
 
     const wSelect = document.getElementById('workplace_id');
@@ -95,12 +98,24 @@ async function loadSelects() {
     devices.forEach(d => {
         dSelect.innerHTML += `<option value="${d.id}">${d.name}</option>`;
     });
+
+    // 2. Load ticket data
+    const res = await apiFetch(`/api/v1/tickets/${ticketId}`);
+    const t = await res.json();
+
+    // 3. Fill form with ticket data
+    document.getElementById('workplace_id').value = t.workplace_id;
+    document.getElementById('device_id').value = t.device_id;
+    document.getElementById('status').value = t.status;
+    document.getElementById('priority').value = t.priority;
+    document.getElementById('assigned_specialist').value = t.assigned_specialist ?? '';
+    document.getElementById('description').value = t.description;
 }
 
-loadSelects();
+loadData();
 
-// Submit form
-document.getElementById('create-ticket-form').addEventListener('submit', async function(e) {
+// Submit form (PUT update)
+document.getElementById('edit-ticket-form').addEventListener('submit', async function(e) {
     e.preventDefault();
 
     const payload = {
@@ -112,15 +127,15 @@ document.getElementById('create-ticket-form').addEventListener('submit', async f
         assigned_specialist: document.getElementById('assigned_specialist').value || null
     };
 
-    const res = await apiFetch('/api/v1/tickets', {
-        method: 'POST',
+    const res = await apiFetch(`/api/v1/tickets/${ticketId}`, {
+        method: 'PUT',
         body: JSON.stringify(payload)
     });
 
     if (res.ok) {
         window.location.href = '/tickets';
     } else {
-        alert('Klaida kuriant bilietą');
+        alert('Klaida redaguojant bilietą');
     }
 });
 </script>
