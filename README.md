@@ -1,36 +1,109 @@
-# IT-Pagalbos-Biletai
-Bendrieji projekto reikalavimai:
-Parengta ir su dėstytoju suderinta projekto užduotis. Minimalūs užduoties apimties reikalavimai:
-bent 3 taikomosios srities objektai tarpusavyje susieti prasminiu ir hierarchiniu ryšiu (pvz.: tema->įrašas->komentaras);
-bent 5 sąsajos (API) metodai (4 CRUD metodai ir 1 metodas grąžinantis sąrašą) kiekvienam taikomosios srities objektui;
-Iš viso 15 skirtingų API metodų.
-bent 1 iš realizuotų sąsajos (API) metodas turi būti hierarchinis, pvz.: grąžinti visus konkretaus namo butus.
-bent 3 rolės (pvz.: svečias, narys, administratorius); 
-Programinis sprendimas turi naudoti duomenų bazę;
-Projektas turi būti realizuotas taikant REST principus;
-Turi būti realizuota autentifikacija ir autorizacija naudojant OAUTH2 arba JWT (naudojant JWT pasirinkti tinkamą žetonų atnaujinimo strategiją);
-Parengta grafinė naudotojo sąsaja (GUI);
-Realizuotas produktas turi būti pasiekiamas saityne, tam panaudojant debesų technologijas.
-Parengta sukurto programinio produkto dokumentacija: uždavinio aprašymas, architektūros diagrama, sąsajų specifikacija naudojant OpenAPI, panaudojimo pavyzdžiai, darbo išvados.
+1.	Sistemos uždavinio aprašymas
+1.1.	Sistemos paskirtis
+Ši sistema siekia sucentruoti technines pagalbos užklausas, norint užtikrinti skaidrią komunikaciją ir greitinti problemų sprendimą.
+Sistemos sandara yra iš dviejų dalių:
+•	Internetinė svetainė, kurią naudoja darbovietės atstovas. Čia jis gales kurti ir stebėti biletus.
+•	API, kuriuo vykdomi duomenų mainai ir JWT technologijomis užtikrinamas konfidencialumas.
 
-Reikalavimai 1 laboratorinam darbui
-Suprojektuoti ir realizuoti REST principais veikiančią API sąsają. Turi būti realizuoti visi užduotyje numatyti API sąsajos metodai!
-Pateikti OpenAPI specifikaciją kiekvienam API metodui;
-Paruošti programavimo aplinką leidžiančią atsiskaitymo metu patogiai paleisti ir pademonstruoti programą.
-Duomenų saugojimui turi būti panaudotas pasirinktas DB sprendimas. Gynimo metu DB turi būti užpildyta prasmingais (uždavinį atitinkančiais) duomenimis;
-Turi būti galimybė iškviesti sąsajos funkcijas (naudojantis naršykle, Postman ar kitu įrankiu) ir gauti teisingai suformuotą atsakymą: prasmingas turinys, teisingas turinio tipas (json, xml, atom, text ar kt.), teisingas atsako kodas (http reponse code);
-Pasiruošti ir pademonstruoti, jog veikia visi 15 API metodų. Demonstracija turėtų trukti iki ~15s. Pavyzdžiui, su Postman collections ir tests. Taupome jūsų ir savo laiką. Papildomai pasiruošti pademonstruoti:
-Kai resursas negali būti rastas (turi grąžinti 404)
-Kai paduodamas blogas payload, turi grąžinti 400/422 priklausomai nuo situacijos
-Kai resursas sukuriamas - 201
-Kai resursas ištrinamas - 200/204 priklausomai, ar grąžinamas response body
-Projekto kodas turi būti laikomas Git saugykloje (github, bitbucket, gitlab ar kt.). Dokumentacija - projektui sukurtame wiki arba projekto kodo Git saugykloje (.readme).
+1.2.	Funkciniai reikialavimai
+Sistema pagrįsta hierarchiniu ryšiu:
+Darbovietė → Bilietas → Įrenginys
+•	Darbovietė: vartotojo identifikacija, priskirti įrenginiai, priskirti sukurti biletai.
+•	Biletas: kūrimas bileto, peržiūra, redagavimas, sąrašo filtravimas.
+•	Įrenginys:  sąrašo gavimas, filtravimas pagal būsena.
 
-<<<<<<< Updated upstream
-API realizuotas per 5 * 3 CRUD metodus. Pagal nurodytus parametrus pateikiamas atitinkamas grazinimo kodas. Duombazeje po 2 testinius elementus kiekvienai klasei. Postman paruostas su .json failu. OpenAPI dokumentacija pasiekiama per /api/documentation, API pasiekiami per /api/v1/{class}
-=======
-Reikalavimai 2 laboratorinam darbui
-Realizuotas produktas turi būti pasiekiamas saityne, tam panaudojant debesų technologijas (AWS, Azure, Google Cloud ir kt.);
-Turi būti realizuota autentifikacja ir autorizacija naudojant OAuth2 arba JWT technologinius sprendimus. Naudotojo rolė turi būti saugoma žetono (token) viduje.  
-Projekto kodas turi būti laikomas Git saugykloje (github, bitbucket, gitlab ar kt.). Dokumentacija - projektui sukurtame wiki arba projekto kodo Git saugykloje (.readme).
->>>>>>> Stashed changes
+1.3.	Sistemos architektūra
+Žemiau pavaizduota sistemos diagrama. Sistema talpinama Railway debesų serveryje, kuris sukuria HTTPS protokolą. REST principai įgyvendinti naudojant API, kuris skirtas užtikrinti leistiną CRUD naudojimą ORM komunikacijai tarp SQLite duombazės.
+ 
+ 
+2.	Naudotojo sąsajos projektas
+2.1.	Atitinkantys langai:
+Pirmasis langas įvedus svetainę (Prisijungimo langas):  
+---------------------------------
+|           LOGO                |
+---------------------------------
+|        Prisijungimo forma     |
+|  [Email]                      |
+|  [Slaptažodis]                |
+|  [Prisijungti]                |
+---------------------------------
+|        Footer info            |
+---------------------------------
+
+
+Valdymo skydas:
+-----------------------------------------------------
+| LOGO | Meniu (desktop) / Hamburger (mobile)       |
+-----------------------------------------------------
+|  Kortelė: Visi bilietai   |  Kortelė: Įrenginiai  |
+-----------------------------------------------------
+|        Bilietų lentelė / sąrašas                  |
+-----------------------------------------------------
+| Footer                                            |
+-----------------------------------------------------
+
+
+Bileto sukūrimo puslapis, 80% atstumas:
+-----------------------------------------------------
+| Header + Meniu                                    |
+-----------------------------------------------------
+| Naujas bilietas                                   |
+-----------------------------------------------------
+| [Pavadinimas]                                     |
+| [Aprašymas - textarea]                            |
+| [Įrenginys - select]                              |
+| [Prioritetas - radio]                             |
+| [Pridėti failą - file input]                      |
+| [Sukurti]                                         |
+-----------------------------------------------------
+| Footer                                            |
+-----------------------------------------------------
+
+Bileto peržiūros langelis:
+------------------ Modal ----------------------------
+| X (uždaryti)                                      |
+-----------------------------------------------------
+| Bilieto pavadinimas                               |
+| Statusas                                          |
+| Aprašymas                                         |
+| Susietas įrenginys                                |
+| Veiksmai: [Redaguoti] [Trinti]                    |
+-----------------------------------------------------
+
+
+Biletų sąrašo puslapis, jei neleistinas vartotojas duomenys nepateikiami:
+ -----------------------------------------------------
+| Header + Meniu                                     |
+------------------------------------------------------
+| [Filtras] [Paieška] [Naujas bilietas]              |
+------------------------------------------------------
+| # | Pavadinimas | Statusas | Įrenginys | Veiksmai  |
+|----------------------------------------------------|
+| 1 | ...         | ...      | ...       | [Peržiūra]|
+| 2 | ...         | ...      | ...       | [Peržiūra]|
+------------------------------------------------------
+| Footer                                             |
+------------------------------------------------------
+
+
+Įrenginių sąrašo puslapis. Jei vartotojas neleistinas, duomenys nepateikiami:
+ -----------------------------------------------------
+| Header + Meniu                                     |
+------------------------------------------------------
+| [Filtras] [Paieška] [Naujas bilietas]              |
+------------------------------------------------------
+| # | Pavadinimas | Tipas | Statusas | Specialistas  |
+|----------------------------------------------------|
+| 1 | ...         | ...      | ...       | [Peržiūra]|
+| 2 | ...         | ...      | ...       | [Peržiūra]|
+------------------------------------------------------
+| Footer                                             |
+------------------------------------------------------
+ 
+3.	API specifikacija
+API pritaiktas CRUD implementacijai ir JWT tokenų realizacijai. Detalizuota API specifikacija pasiekiama /api/documentation svetainėje arba api-docs.json faile.
+
+4.	Išvados
+Projektas, kuris sukurtas pritaikant modernius saugumo ir inkapsuliacijos metodus sėkmingai gali būti pritaikytas rinkai. Kadangi jo tikslas darbuotojams prisijungti ir pateikti norimas užklausas, saugumo reikalavimai riboti, o JWT technologijos skirtos duomenų nutekėjimo prevencijai. Integracija į debesija yra, bet nėra projekto atžvilgiu nėra aktuali, nebent imonė yra kelių lokacijų.
+
+
