@@ -1,4 +1,4 @@
-1.	Sistemos uždavinio aprašymas
+#	Sistemos uždavinio aprašymas
 
 1.1.	Sistemos paskirtis
 
@@ -19,7 +19,7 @@ Darbovietė → Bilietas → Įrenginys
 
 Žemiau pavaizduota sistemos diagrama. Sistema talpinama Railway debesų serveryje, kuris sukuria HTTPS protokolą. REST principai įgyvendinti naudojant API, kuris skirtas užtikrinti leistiną CRUD naudojimą ORM komunikacijai tarp SQLite duombazės.
  
-2.	Naudotojo sąsajos projektas
+#	Naudotojo sąsajos projektas
 
 2.1.	Atitinkantys langai:
 
@@ -67,9 +67,9 @@ Bileto sukūrimo puslapis, 80% atstumas:
 | Footer                                            |
 -----------------------------------------------------
 
-Bileto peržiūros langelis:
+Bileto peržiūros langelis (Modal):
 
------------------- Modal ----------------------------
+-----------------------------------------------------
 | X (uždaryti)                                      |
 -----------------------------------------------------
 | Bilieto pavadinimas                               |
@@ -88,7 +88,7 @@ Biletų sąrašo puslapis, jei neleistinas vartotojas duomenys nepateikiami:
 | [Filtras] [Paieška] [Naujas bilietas]              |
 ------------------------------------------------------
 | # | Pavadinimas | Statusas | Įrenginys | Veiksmai  |
-|----------------------------------------------------|
+------------------------------------------------------
 | 1 | ...         | ...      | ...       | [Peržiūra]|
 | 2 | ...         | ...      | ...       | [Peržiūra]|
 ------------------------------------------------------
@@ -104,19 +104,19 @@ Biletų sąrašo puslapis, jei neleistinas vartotojas duomenys nepateikiami:
 | [Filtras] [Paieška] [Naujas bilietas]              |
 ------------------------------------------------------
 | # | Pavadinimas | Tipas | Statusas | Specialistas  |
-|----------------------------------------------------|
-| 1 | ...         | ...      | ...       | [Peržiūra]|
-| 2 | ...         | ...      | ...       | [Peržiūra]|
+------------------------------------------------------
+| 1 | ...         | ...      | ...       | ...       |
+| 2 | ...         | ...      | ...       | ...       |
 ------------------------------------------------------
 | Footer                                             |
 ------------------------------------------------------
  
-3.	API specifikacija
+#	API specifikacija
 
 API pritaiktas CRUD implementacijai ir JWT tokenų realizacijai. 
 Detalizuota API specifikacija pasiekiama /api/documentation svetainėje arba api-docs.json faile.
 
-4.	Išvados
+#	Išvados
 
 Projektas, kuris sukurtas pritaikant modernius saugumo ir inkapsuliacijos metodus sėkmingai gali būti pritaikytas rinkai. Kadangi jo tikslas darbuotojams prisijungti ir pateikti norimas užklausas, saugumo reikalavimai riboti, o JWT technologijos skirtos duomenų nutekėjimo prevencijai. Integracija į debesija yra, bet nėra projekto atžvilgiu nėra aktuali, nebent imonė yra kelių lokacijų.
 
