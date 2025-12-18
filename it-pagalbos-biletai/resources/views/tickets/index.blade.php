@@ -87,7 +87,7 @@
             </table>
         </div>
 
-        <!-- Paginacija -->
+        <!-- Paging -->
         <div id="pagination" class="flex justify-center mt-4 gap-2"></div>
     </div>
 
@@ -126,7 +126,7 @@ async function loadTickets(page = 1) {
 
     let url;
 
-    // Jei pasirinkta darbovietė → naudoti tavo API metodą
+    // Jei pasirinkta darbovietė naudoti API
     if (workplace) {
         url = `/api/v1/workplaces/${workplace}/tickets?page=${page}`;
     } else {
@@ -168,7 +168,7 @@ async function loadTickets(page = 1) {
         `;
     });
 
-    // Pagination
+    // Paging
     const pag = document.getElementById('pagination');
     pag.innerHTML = '';
 

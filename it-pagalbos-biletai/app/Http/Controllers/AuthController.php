@@ -76,37 +76,6 @@ public function login(Request $req)
         'refresh_token' => $refreshPlain,
     ]);
 }
-
-/* YES PASSWORD
-public function login(Request $req)
-{
-    $user = User::where('email', $req->email)->first();
-    if (!$user || !Hash::check($req->password, $user->password)) {
-        return response()->json(['error' => 'Invalid credentials'], 401);
-    }
-
-    $access = JWT::encode([
-        'sub' => $user->id,
-        'role' => $user->role,
-        'exp' => now()->addMinutes(config('auth.access_ttl'))->timestamp,
-    ], env('JWT_SECRET'), 'HS256');
-
-    $refreshPlain = Str::random(64);
-    RefreshToken::create([
-        'user_id' => $user->id,
-        'token_hash' => hash('sha256', $refreshPlain),
-        'expires_at' => now()->addDays(config('auth.refresh_ttl')),
-        'user_agent' => $req->userAgent(),
-        'ip' => $req->ip(),
-    ]);
-
-    return response()->json([
-        'access_token' => $access,
-        'access_expires_in' => config('auth.access_ttl') * 60,
-        'refresh_token' => $refreshPlain,
-    ]);
-}*/
-
     /**
      * @OA\Post(
      *     path="/auth/refresh",
@@ -200,3 +169,32 @@ public function login(Request $req)
     }
 
 }
+/* YES PASSWORD
+public function login(Request $req)
+{
+    $user = User::where('email', $req->email)->first();
+    if (!$user || !Hash::check($req->password, $user->password)) {
+        return response()->json(['error' => 'Invalid credentials'], 401);
+    }
+
+    $access = JWT::encode([
+        'sub' => $user->id,
+        'role' => $user->role,
+        'exp' => now()->addMinutes(config('auth.access_ttl'))->timestamp,
+    ], env('JWT_SECRET'), 'HS256');
+
+    $refreshPlain = Str::random(64);
+    RefreshToken::create([
+        'user_id' => $user->id,
+        'token_hash' => hash('sha256', $refreshPlain),
+        'expires_at' => now()->addDays(config('auth.refresh_ttl')),
+        'user_agent' => $req->userAgent(),
+        'ip' => $req->ip(),
+    ]);
+
+    return response()->json([
+        'access_token' => $access,
+        'access_expires_in' => config('auth.access_ttl') * 60,
+        'refresh_token' => $refreshPlain,
+    ]);
+}*/

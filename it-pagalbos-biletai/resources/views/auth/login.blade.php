@@ -33,7 +33,7 @@
                 HelpDesk
             </div>
 
-            <!-- Desktop meniu (login puslapyje gali būti tuščias, bet laboratorijai reikia skirtingo stiliaus) -->
+            <!-- Desktop meniu -->
             <nav class="hidden md:block">
                 <ul class="flex gap-6 text-sm text-gray-300">
                     <li><span class="opacity-60">Pagalbos sistema</span></li>
