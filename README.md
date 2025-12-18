@@ -44,25 +44,28 @@ Valdymo skydas:
 -----------------------------------------------------
 |  Kortelė: Visi bilietai   |  Kortelė: Įrenginiai  |
 -----------------------------------------------------
-|        Bilietų lentelė / sąrašas                  |
+|   Paskutiniai biletai     | Naujas Biletas        |
+-----------------------------------------------------
+|                      Biletai                      |
 -----------------------------------------------------
 | Footer                                            |
 -----------------------------------------------------
 
 
-Bileto sukūrimo puslapis, 80% atstumas:
+Bileto sukūrimo/redagavimo puslapis:
 
 -----------------------------------------------------
 | Header + Meniu                                    |
 -----------------------------------------------------
-| Naujas bilietas                                   |
+| Naujas bilietas (Redaguoti biletą)                |
 -----------------------------------------------------
-| [Pavadinimas]                                     |
+| [Darbovietes Pavadinimas - dropdown]              |
+| [Įrenginys - dropdown]                            |
+| [Prioritetas - dropdown]                          |
+| [Statusas - dropdown]                             |
+| [Specialistas - textarea]                         |
 | [Aprašymas - textarea]                            |
-| [Įrenginys - select]                              |
-| [Prioritetas - radio]                             |
-| [Pridėti failą - file input]                      |
-| [Sukurti]                                         |
+| [Sukurti (Išsaugoti)]                             |
 -----------------------------------------------------
 | Footer                                            |
 -----------------------------------------------------
@@ -87,16 +90,16 @@ Biletų sąrašo puslapis, jei neleistinas vartotojas duomenys nepateikiami:
 ------------------------------------------------------
 | [Filtras] [Paieška] [Naujas bilietas]              |
 ------------------------------------------------------
-| # | Pavadinimas | Statusas | Įrenginys | Veiksmai  |
+| # | Statusas    | Priority | Sukurta   | Veiksmai  |
 ------------------------------------------------------
-| 1 | ...         | ...      | ...       | [Peržiūra]|
-| 2 | ...         | ...      | ...       | [Peržiūra]|
+| 1 | ...         | ...      | ...       | [C/R/D]   |
+| 2 | ...         | ...      | ...       | [C/R/D]   |
 ------------------------------------------------------
 | Footer                                             |
 ------------------------------------------------------
 
 
-Įrenginių sąrašo puslapis. Jei vartotojas neleistinas, duomenys nepateikiami:
+Įrenginių sąrašo puslapis:
 
  -----------------------------------------------------
 | Header + Meniu                                     |
