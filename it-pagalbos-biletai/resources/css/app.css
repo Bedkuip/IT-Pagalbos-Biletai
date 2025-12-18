@@ -1,11 +1,57 @@
-@import 'tailwindcss';
+/* Tailwind bazė */
+@import "tailwindcss";
 
+/* Laravel Blade failų šaltiniai */
 @source '../../vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php';
 @source '../../storage/framework/views/*.php';
 @source '../**/*.blade.php';
 @source '../**/*.js';
 
+/* Pasirinktas šriftas */
 @theme {
-    --font-sans: 'Instrument Sans', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji',
-        'Segoe UI Symbol', 'Noto Color Emoji';
+    --font-sans: 'Instrument Sans', ui-sans-serif, system-ui, sans-serif,
+        'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
+}
+
+/* UI Stiliai */
+
+/* Paveikslėlių prisitaikymas */
+img {
+    max-width: 100%;
+    height: auto;
+    display: block;
+}
+
+/* Modal animacija */
+@keyframes modalIn {
+    from {
+        transform: translateY(20px);
+        opacity: 0;
+    }
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+/* Papildoma transition klasė formoms */
+.input-focus-transition {
+    transition: box-shadow 0.2s ease, border-color 0.2s ease, transform 0.2s ease;
+}
+
+/* Hamburger animacijos */
+.hamburger-line {
+    transition: transform 0.2s ease, opacity 0.2s ease;
+}
+
+.hamburger-open .line-1 {
+    transform: translateY(6px) rotate(45deg);
+}
+
+.hamburger-open .line-2 {
+    opacity: 0;
+}
+
+.hamburger-open .line-3 {
+    transform: translateY(-6px) rotate(-45deg);
 }

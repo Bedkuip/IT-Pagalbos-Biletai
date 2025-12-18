@@ -1,38 +1,39 @@
 <?php
-use App\Http\Controllers\AuthController;
+
+use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\WorkplaceController;
 use App\Http\Controllers\DeviceController;
 use App\Http\Controllers\TicketController;
+use App\Http\Controllers\AuthController;
+
+Route::post('/auth/login', [AuthController::class, 'login']);
+Route::post('/auth/refresh', [AuthController::class, 'refresh']);
+Route::post('/auth/logout', [AuthController::class, 'logout']);
 
 Route::prefix('v1')->group(function () {
-  // Auth
-  Route::post('/auth/register', [AuthController::class, 'register']);
-  Route::post('/auth/login', [AuthController::class, 'login']);
-  Route::middleware('auth:sanctum')->group(function () {
-    Route::get('/me', [AuthController::class, 'me']);
-    Route::put('/me', [AuthController::class, 'update']);
-  });
+    // Simple ping test
+    Route::get('/ping', function () {
+        return response()->json(['pong' => true]);
+    });
 
-Route::get('/ping', function () {
-    return response()->json(['pong' => true]);
-});
+    
+        // Dropdown endpoints
+    Route::get('/workplaces/all', function () {
+        return \App\Models\Workplace::all();
+    });
 
-Route::get('/ping', [PingController::class, 'ping']);
+    Route::get('/devices/all', function () {
+        return \App\Models\Device::all();
+    });
+    
+    // Protected CRUD resources
+    Route::middleware('jwt')->group(function () {
+        Route::apiResource('workplaces', WorkplaceController::class);
+        Route::apiResource('devices', DeviceController::class);
+        Route::apiResource('tickets', TicketController::class);
+    });
 
- /* // Protected CRUD
-  Route::middleware('auth:sanctum')->group(function () {
-    Route::apiResource('workplaces', WorkplaceController::class);
-    Route::apiResource('devices', DeviceController::class);
-    Route::apiResource('tickets', TicketController::class);
-  });*/
 
-  // Public filtered lists for fast demo
-  Route::get('tickets', [TicketController::class, 'index']);
-  Route::get('devices', [DeviceController::class, 'index']);
-  Route::get('workplaces', [WorkplaceController::class, 'index']);
-
-  // Public CRUD routes (no Sanctum)
-Route::apiResource('workplaces', WorkplaceController::class);
-Route::apiResource('devices', DeviceController::class);
-Route::apiResource('tickets', TicketController::class);
+    
+    Route::get('/test', fn() => 'works');
 });

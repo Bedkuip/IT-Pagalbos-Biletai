@@ -13,7 +13,14 @@ class WorkplaceController extends Controller
      *   path="/api/v1/workplaces",
      *   tags={"Workplaces"},
      *   summary="List all workplaces",
-     *   @OA\Response(response=200, description="Successful list")
+     *   @OA\Response(
+     *     response=200,
+     *     description="Successful list",
+     *     @OA\JsonContent(
+     *       type="array",
+     *       @OA\Items(ref="#/components/schemas/Workplace")
+     *     )
+     *   )
      * )
      */
     public function index(Request $r) {
@@ -35,14 +42,13 @@ class WorkplaceController extends Controller
      *   summary="Create a new workplace",
      *   @OA\RequestBody(
      *     required=true,
-     *     @OA\JsonContent(
-     *       required={"name","email"},
-     *       @OA\Property(property="name", type="string", example="Faculty of IT"),
-     *       @OA\Property(property="email", type="string", example="it@university.lt"),
-     *       @OA\Property(property="role", type="string", enum={"user","admin"}, example="user")
-     *     )
+     *     @OA\JsonContent(ref="#/components/schemas/Workplace")
      *   ),
-     *   @OA\Response(response=201, description="Created"),
+     *   @OA\Response(
+     *     response=201,
+     *     description="Created",
+     *     @OA\JsonContent(ref="#/components/schemas/Workplace")
+     *   ),
      *   @OA\Response(response=422, description="Validation error"),
      *   @OA\Response(response=400, description="Bad payload")
      * )
@@ -63,7 +69,11 @@ class WorkplaceController extends Controller
      *   tags={"Workplaces"},
      *   summary="Get a workplace by ID",
      *   @OA\Parameter(name="id", in="path", required=true, @OA\Schema(type="integer")),
-     *   @OA\Response(response=200, description="Found"),
+     *   @OA\Response(
+     *     response=200,
+     *     description="Found",
+     *     @OA\JsonContent(ref="#/components/schemas/Workplace")
+     *   ),
      *   @OA\Response(response=404, description="Not found")
      * )
      */
@@ -88,13 +98,13 @@ class WorkplaceController extends Controller
      *   @OA\Parameter(name="id", in="path", required=true, @OA\Schema(type="integer")),
      *   @OA\RequestBody(
      *     required=true,
-     *     @OA\JsonContent(
-     *       @OA\Property(property="name", type="string", example="Updated Faculty"),
-     *       @OA\Property(property="email", type="string", example="new@university.lt"),
-     *       @OA\Property(property="role", type="string", enum={"user","admin"}, example="admin")
-     *     )
+     *     @OA\JsonContent(ref="#/components/schemas/Workplace")
      *   ),
-     *   @OA\Response(response=200, description="Updated"),
+     *   @OA\Response(
+     *     response=200,
+     *     description="Updated",
+     *     @OA\JsonContent(ref="#/components/schemas/Workplace")
+     *   ),
      *   @OA\Response(response=404, description="Not found"),
      *   @OA\Response(response=422, description="Validation error")
      * )

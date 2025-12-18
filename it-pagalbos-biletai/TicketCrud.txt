@@ -1,0 +1,88 @@
+{
+  "info": {
+    "name": "Ticket API CRUD",
+    "_postman_id": "12345678-abcd-efgh-ijkl-987654321000",
+    "description": "CRUD endpoints for Tickets with JWT role-based access",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Create Ticket (User)",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9...",
+            "type": "text"
+          },
+          {
+            "key": "Content-Type",
+            "value": "application/json",
+            "type": "text"
+          }
+        ],
+        "url": {
+          "raw": "http://localhost:8000/api/v1/tickets",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "8000",
+          "path": ["api", "v1", "tickets"]
+        },
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"workplace_id\": 1,\n  \"device_id\": 5,\n  \"status\": \"open\",\n  \"priority\": \"high\",\n  \"description\": \"Printer not working\",\n  \"assigned_specialist\": \"Jonas Specialist\"\n}"
+        }
+      }
+    },
+    {
+      "name": "Update Ticket (User)",
+      "request": {
+        "method": "PUT",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9...",
+            "type": "text"
+          },
+          {
+            "key": "Content-Type",
+            "value": "application/json",
+            "type": "text"
+          }
+        ],
+        "url": {
+          "raw": "http://localhost:8000/api/v1/tickets/10",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "8000",
+          "path": ["api", "v1", "tickets", "10"]
+        },
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"status\": \"in_progress\",\n  \"priority\": \"medium\",\n  \"description\": \"Printer jam cleared, testing\"\n}"
+        }
+      }
+    },
+    {
+      "name": "Delete Ticket (Admin)",
+      "request": {
+        "method": "DELETE",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9...",
+            "type": "text"
+          }
+        ],
+        "url": {
+          "raw": "http://localhost:8000/api/v1/tickets/10",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "8000",
+          "path": ["api", "v1", "tickets", "10"]
+        }
+      }
+    }
+  ]
+}

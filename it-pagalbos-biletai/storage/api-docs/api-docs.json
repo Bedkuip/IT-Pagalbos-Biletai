@@ -12,6 +12,170 @@
         }
     ],
     "paths": {
+        "/auth/login": {
+            "post": {
+                "tags": [
+                    "Auth"
+                ],
+                "summary": "Prisijungimas",
+                "description": "Naudotojas pateikia el. paštą ir slaptažodį, gauna JWT access ir refresh tokenus",
+                "operationId": "8cb7742ae98d0990acb2907c4e00bf24",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "email",
+                                    "password"
+                                ],
+                                "properties": {
+                                    "email": {
+                                        "type": "string",
+                                        "example": "user@example.com"
+                                    },
+                                    "password": {
+                                        "type": "string",
+                                        "example": "secret123"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Sėkmingas prisijungimas",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "access_token": {
+                                            "type": "string"
+                                        },
+                                        "access_expires_in": {
+                                            "type": "integer",
+                                            "example": 900
+                                        },
+                                        "refresh_token": {
+                                            "type": "string"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Neteisingi prisijungimo duomenys"
+                    }
+                }
+            }
+        },
+        "/auth/refresh": {
+            "post": {
+                "tags": [
+                    "Auth"
+                ],
+                "summary": "Atnaujinti JWT tokenus",
+                "description": "Naudotojas pateikia refresh tokeną, gauna naują access ir refresh tokenų porą",
+                "operationId": "f6c9683ed975ace7d035a09e6e2a9332",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "refresh_token"
+                                ],
+                                "properties": {
+                                    "refresh_token": {
+                                        "type": "string",
+                                        "example": "abc123..."
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Sėkmingai atnaujinti tokenai",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "access_token": {
+                                            "type": "string"
+                                        },
+                                        "access_expires_in": {
+                                            "type": "integer",
+                                            "example": 900
+                                        },
+                                        "refresh_token": {
+                                            "type": "string"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Neteisingas arba pasibaigęs refresh tokenas"
+                    }
+                }
+            }
+        },
+        "/auth/logout": {
+            "post": {
+                "tags": [
+                    "Auth"
+                ],
+                "summary": "Atsijungimas",
+                "description": "Naudotojas pateikia refresh tokeną, kuris anuliuojamas",
+                "operationId": "0d29c740dc06d77602af8095bf4654cc",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "refresh_token"
+                                ],
+                                "properties": {
+                                    "refresh_token": {
+                                        "type": "string",
+                                        "example": "abc123..."
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Sėkmingas atsijungimas",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "ok": {
+                                            "type": "boolean",
+                                            "example": true
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
         "/api/v1/devices": {
             "get": {
                 "tags": [
@@ -50,7 +214,17 @@
                 ],
                 "responses": {
                     "200": {
-                        "description": "Successful list"
+                        "description": "Successful list",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/Device"
+                                    }
+                                }
+                            }
+                        }
                     }
                 }
             },
@@ -65,48 +239,21 @@
                     "content": {
                         "application/json": {
                             "schema": {
-                                "required": [
-                                    "workplace_id",
-                                    "type",
-                                    "status"
-                                ],
-                                "properties": {
-                                    "workplace_id": {
-                                        "type": "integer",
-                                        "example": 1
-                                    },
-                                    "type": {
-                                        "type": "string",
-                                        "enum": [
-                                            "pc",
-                                            "printer",
-                                            "network",
-                                            "other"
-                                        ],
-                                        "example": "pc"
-                                    },
-                                    "status": {
-                                        "type": "string",
-                                        "enum": [
-                                            "active",
-                                            "inactive",
-                                            "maintenance"
-                                        ],
-                                        "example": "active"
-                                    },
-                                    "serial": {
-                                        "type": "string",
-                                        "example": "SN-1234-XYZ"
-                                    }
-                                },
-                                "type": "object"
+                                "$ref": "#/components/schemas/Device"
                             }
                         }
                     }
                 },
                 "responses": {
                     "201": {
-                        "description": "Created"
+                        "description": "Created",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Device"
+                                }
+                            }
+                        }
                     },
                     "422": {
                         "description": "Validation error"
@@ -136,7 +283,14 @@
                 ],
                 "responses": {
                     "200": {
-                        "description": "Found"
+                        "description": "Found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Device"
+                                }
+                            }
+                        }
                     },
                     "404": {
                         "description": "Not found"
@@ -164,36 +318,21 @@
                     "content": {
                         "application/json": {
                             "schema": {
-                                "properties": {
-                                    "type": {
-                                        "type": "string",
-                                        "enum": [
-                                            "pc",
-                                            "printer",
-                                            "network",
-                                            "other"
-                                        ]
-                                    },
-                                    "status": {
-                                        "type": "string",
-                                        "enum": [
-                                            "active",
-                                            "inactive",
-                                            "maintenance"
-                                        ]
-                                    },
-                                    "serial": {
-                                        "type": "string"
-                                    }
-                                },
-                                "type": "object"
+                                "$ref": "#/components/schemas/Device"
                             }
                         }
                     }
                 },
                 "responses": {
                     "200": {
-                        "description": "Updated"
+                        "description": "Updated",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Device"
+                                }
+                            }
+                        }
                     },
                     "404": {
                         "description": "Not found"
@@ -221,7 +360,7 @@
                 ],
                 "responses": {
                     "204": {
-                        "description": "Deleted"
+                        "description": "Deleted (no content)"
                     },
                     "404": {
                         "description": "Not found"
@@ -275,7 +414,17 @@
                 ],
                 "responses": {
                     "200": {
-                        "description": "Successful list"
+                        "description": "Successful list",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/Ticket"
+                                    }
+                                }
+                            }
+                        }
                     }
                 }
             },
@@ -290,63 +439,61 @@
                     "content": {
                         "application/json": {
                             "schema": {
-                                "required": [
-                                    "workplace_id",
-                                    "device_id",
-                                    "status",
-                                    "priority",
-                                    "description"
-                                ],
-                                "properties": {
-                                    "workplace_id": {
-                                        "type": "integer",
-                                        "example": 1
-                                    },
-                                    "device_id": {
-                                        "type": "integer",
-                                        "example": 5
-                                    },
-                                    "status": {
-                                        "type": "string",
-                                        "enum": [
-                                            "open",
-                                            "in_progress",
-                                            "resolved"
-                                        ],
-                                        "example": "open"
-                                    },
-                                    "priority": {
-                                        "type": "string",
-                                        "enum": [
-                                            "low",
-                                            "medium",
-                                            "high"
-                                        ],
-                                        "example": "high"
-                                    },
-                                    "description": {
-                                        "type": "string",
-                                        "example": "Printer not working"
-                                    },
-                                    "assigned_specialist": {
-                                        "type": "string",
-                                        "example": "Jonas Specialist"
-                                    }
-                                },
-                                "type": "object"
+                                "$ref": "#/components/schemas/Ticket"
                             }
                         }
                     }
                 },
                 "responses": {
                     "201": {
-                        "description": "Created"
+                        "description": "Created",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Ticket"
+                                }
+                            }
+                        }
                     },
                     "422": {
                         "description": "Validation error"
                     },
                     "400": {
                         "description": "Bad payload"
+                    }
+                }
+            }
+        },
+        "/api/v1/workplaces/{id}/tickets": {
+            "get": {
+                "tags": [
+                    "Workplaces"
+                ],
+                "summary": "Get all tickets for a workplace",
+                "operationId": "ab12f72d2ceeca3736af255ba9f6e712",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "List of tickets",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/Ticket"
+                                    }
+                                }
+                            }
+                        }
                     }
                 }
             }
@@ -370,7 +517,14 @@
                 ],
                 "responses": {
                     "200": {
-                        "description": "Found"
+                        "description": "Found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Ticket"
+                                }
+                            }
+                        }
                     },
                     "404": {
                         "description": "Not found"
@@ -398,38 +552,21 @@
                     "content": {
                         "application/json": {
                             "schema": {
-                                "properties": {
-                                    "status": {
-                                        "type": "string",
-                                        "enum": [
-                                            "open",
-                                            "in_progress",
-                                            "resolved"
-                                        ]
-                                    },
-                                    "priority": {
-                                        "type": "string",
-                                        "enum": [
-                                            "low",
-                                            "medium",
-                                            "high"
-                                        ]
-                                    },
-                                    "description": {
-                                        "type": "string"
-                                    },
-                                    "assigned_specialist": {
-                                        "type": "string"
-                                    }
-                                },
-                                "type": "object"
+                                "$ref": "#/components/schemas/Ticket"
                             }
                         }
                     }
                 },
                 "responses": {
                     "200": {
-                        "description": "Updated"
+                        "description": "Updated",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Ticket"
+                                }
+                            }
+                        }
                     },
                     "404": {
                         "description": "Not found"
@@ -457,7 +594,7 @@
                 ],
                 "responses": {
                     "204": {
-                        "description": "Deleted"
+                        "description": "Deleted (no content)"
                     },
                     "404": {
                         "description": "Not found"
@@ -474,7 +611,17 @@
                 "operationId": "68a2bd6ec868c71bb0b19bfa6b4fd18d",
                 "responses": {
                     "200": {
-                        "description": "Successful list"
+                        "description": "Successful list",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/Workplace"
+                                    }
+                                }
+                            }
+                        }
                     }
                 }
             },
@@ -489,36 +636,21 @@
                     "content": {
                         "application/json": {
                             "schema": {
-                                "required": [
-                                    "name",
-                                    "email"
-                                ],
-                                "properties": {
-                                    "name": {
-                                        "type": "string",
-                                        "example": "Faculty of IT"
-                                    },
-                                    "email": {
-                                        "type": "string",
-                                        "example": "it@university.lt"
-                                    },
-                                    "role": {
-                                        "type": "string",
-                                        "enum": [
-                                            "user",
-                                            "admin"
-                                        ],
-                                        "example": "user"
-                                    }
-                                },
-                                "type": "object"
+                                "$ref": "#/components/schemas/Workplace"
                             }
                         }
                     }
                 },
                 "responses": {
                     "201": {
-                        "description": "Created"
+                        "description": "Created",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Workplace"
+                                }
+                            }
+                        }
                     },
                     "422": {
                         "description": "Validation error"
@@ -548,7 +680,14 @@
                 ],
                 "responses": {
                     "200": {
-                        "description": "Found"
+                        "description": "Found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Workplace"
+                                }
+                            }
+                        }
                     },
                     "404": {
                         "description": "Not found"
@@ -576,32 +715,21 @@
                     "content": {
                         "application/json": {
                             "schema": {
-                                "properties": {
-                                    "name": {
-                                        "type": "string",
-                                        "example": "Updated Faculty"
-                                    },
-                                    "email": {
-                                        "type": "string",
-                                        "example": "new@university.lt"
-                                    },
-                                    "role": {
-                                        "type": "string",
-                                        "enum": [
-                                            "user",
-                                            "admin"
-                                        ],
-                                        "example": "admin"
-                                    }
-                                },
-                                "type": "object"
+                                "$ref": "#/components/schemas/Workplace"
                             }
                         }
                     }
                 },
                 "responses": {
                     "200": {
-                        "description": "Updated"
+                        "description": "Updated",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Workplace"
+                                }
+                            }
+                        }
                     },
                     "404": {
                         "description": "Not found"
@@ -638,7 +766,189 @@
             }
         }
     },
+    "components": {
+        "schemas": {
+            "Device": {
+                "title": "Device",
+                "description": "Įrenginio objektas",
+                "properties": {
+                    "id": {
+                        "type": "integer",
+                        "example": 100
+                    },
+                    "workplace_id": {
+                        "type": "integer",
+                        "example": 1
+                    },
+                    "type": {
+                        "type": "string",
+                        "enum": [
+                            "pc",
+                            "printer",
+                            "network",
+                            "other"
+                        ],
+                        "example": "pc"
+                    },
+                    "status": {
+                        "type": "string",
+                        "enum": [
+                            "active",
+                            "inactive",
+                            "maintenance"
+                        ],
+                        "example": "active"
+                    },
+                    "serial": {
+                        "type": "string",
+                        "example": "SN-1234-XYZ"
+                    },
+                    "created_at": {
+                        "type": "string",
+                        "format": "date-time",
+                        "example": "2025-10-22T06:00:00Z"
+                    },
+                    "updated_at": {
+                        "type": "string",
+                        "format": "date-time",
+                        "example": "2025-10-22T06:05:00Z"
+                    }
+                },
+                "type": "object"
+            },
+            "Ticket": {
+                "title": "Ticket",
+                "description": "Pagalbos bilieto objektas",
+                "properties": {
+                    "id": {
+                        "type": "integer",
+                        "example": 10
+                    },
+                    "workplace_id": {
+                        "type": "integer",
+                        "example": 1
+                    },
+                    "device_id": {
+                        "type": "integer",
+                        "example": 5
+                    },
+                    "status": {
+                        "type": "string",
+                        "enum": [
+                            "open",
+                            "in_progress",
+                            "resolved"
+                        ],
+                        "example": "open"
+                    },
+                    "priority": {
+                        "type": "string",
+                        "enum": [
+                            "low",
+                            "medium",
+                            "high"
+                        ],
+                        "example": "high"
+                    },
+                    "description": {
+                        "type": "string",
+                        "example": "Printer not working"
+                    },
+                    "assigned_specialist": {
+                        "type": "string",
+                        "example": "Jonas Specialist"
+                    },
+                    "created_at": {
+                        "type": "string",
+                        "format": "date-time",
+                        "example": "2025-10-22T06:00:00Z"
+                    },
+                    "updated_at": {
+                        "type": "string",
+                        "format": "date-time",
+                        "example": "2025-10-22T06:05:00Z"
+                    }
+                },
+                "type": "object"
+            },
+            "User": {
+                "title": "Naudotojas",
+                "description": "Sistemos naudotojo modelis",
+                "properties": {
+                    "id": {
+                        "type": "integer",
+                        "example": 1
+                    },
+                    "name": {
+                        "type": "string",
+                        "example": "Jonas Jonaitis"
+                    },
+                    "email": {
+                        "type": "string",
+                        "example": "jonas@example.com"
+                    },
+                    "password": {
+                        "description": "Slaptažodis saugomas hash formatu",
+                        "type": "string",
+                        "example": "hashed_password"
+                    },
+                    "role": {
+                        "description": "Naudotojo rolė: guest, member, admin",
+                        "type": "string",
+                        "example": "member"
+                    },
+                    "darboviete_id": {
+                        "description": "Naudotojo darbovietės ID",
+                        "type": "integer",
+                        "example": 2
+                    }
+                },
+                "type": "object"
+            },
+            "Workplace": {
+                "title": "Workplace",
+                "description": "Darbo vietos objektas",
+                "properties": {
+                    "id": {
+                        "type": "integer",
+                        "example": 1
+                    },
+                    "name": {
+                        "type": "string",
+                        "example": "Faculty of IT"
+                    },
+                    "email": {
+                        "type": "string",
+                        "example": "it@university.lt"
+                    },
+                    "role": {
+                        "type": "string",
+                        "enum": [
+                            "user",
+                            "admin"
+                        ],
+                        "example": "user"
+                    },
+                    "created_at": {
+                        "type": "string",
+                        "format": "date-time",
+                        "example": "2025-10-22T06:00:00Z"
+                    },
+                    "updated_at": {
+                        "type": "string",
+                        "format": "date-time",
+                        "example": "2025-10-22T06:05:00Z"
+                    }
+                },
+                "type": "object"
+            }
+        }
+    },
     "tags": [
+        {
+            "name": "Auth",
+            "description": "Autentifikacijos ir autorizacijos API"
+        },
         {
             "name": "Devices",
             "description": "Devices"

@@ -8,14 +8,21 @@ use OpenApi\Annotations as OA;
 
 class TicketController extends Controller
 {
-        /**
+    /**
      * @OA\Get(
      *   path="/api/v1/tickets",
      *   tags={"Tickets"},
      *   summary="List all tickets (with optional filters)",
      *   @OA\Parameter(name="status", in="query", required=false, @OA\Schema(type="string", enum={"open","in_progress","resolved"})),
      *   @OA\Parameter(name="assigned", in="query", required=false, @OA\Schema(type="string")),
-     *   @OA\Response(response=200, description="Successful list")
+     *   @OA\Response(
+     *     response=200,
+     *     description="Successful list",
+     *     @OA\JsonContent(
+     *       type="array",
+     *       @OA\Items(ref="#/components/schemas/Ticket")
+     *     )
+     *   )
      * )
      */
     public function index(Request $r) {
@@ -24,6 +31,22 @@ class TicketController extends Controller
         foreach (['status','type','assigned_specialist'] as $f) if($r->filled($f)) $q->where($f, $r->$f);
         return response()->json($q->paginate(10), 200);
     }
+
+
+    /**
+     * @OA\Get(
+     *   path="/api/v1/workplaces/{id}/tickets",
+     *   tags={"Workplaces"},
+     *   summary="Get all tickets for a workplace",
+     *   @OA\Parameter(name="id", in="path", required=true, @OA\Schema(type="integer")),
+     *   @OA\Response(response=200, description="List of tickets", @OA\JsonContent(type="array", @OA\Items(ref="#/components/schemas/Ticket")))
+     * )
+     */
+    public function ticketsByWorkplace($id) {
+        $tickets = Ticket::where('workplace_id', $id)->get();
+        return response()->json($tickets, 200);
+    }
+
 
     public function create()
     {
@@ -37,30 +60,33 @@ class TicketController extends Controller
      *   summary="Create a new ticket",
      *   @OA\RequestBody(
      *     required=true,
-     *     @OA\JsonContent(
-     *       required={"workplace_id","device_id","status","priority","description"},
-     *       @OA\Property(property="workplace_id", type="integer", example=1),
-     *       @OA\Property(property="device_id", type="integer", example=5),
-     *       @OA\Property(property="status", type="string", enum={"open","in_progress","resolved"}, example="open"),
-     *       @OA\Property(property="priority", type="string", enum={"low","medium","high"}, example="high"),
-     *       @OA\Property(property="description", type="string", example="Printer not working"),
-     *       @OA\Property(property="assigned_specialist", type="string", example="Jonas Specialist")
-     *     )
+     *     @OA\JsonContent(ref="#/components/schemas/Ticket")
      *   ),
-     *   @OA\Response(response=201, description="Created"),
+     *   @OA\Response(
+     *     response=201,
+     *     description="Created",
+     *     @OA\JsonContent(ref="#/components/schemas/Ticket")
+     *   ),
      *   @OA\Response(response=422, description="Validation error"),
      *   @OA\Response(response=400, description="Bad payload")
      * )
      */
     public function store(Request $r) {
+        // Only users can create
+        $role = $r->attributes->get('role');
+        if ($role !== 'user') {
+            return response()->json(['error' => 'Forbidden'], 403);
+        }
+
         $data = $r->validate([
-    'workplace_id' => 'required|exists:workplaces,id',
-    'device_id' => 'required|exists:devices,id',
-    'status' => 'required|in:open,in_progress,resolved',
-    'priority' => 'required|in:low,medium,high',
-    'description' => 'required|min:5',
-    'assigned_specialist' => 'nullable|string'
-]);
+            'workplace_id' => 'required|exists:workplaces,id',
+            'device_id' => 'required|exists:devices,id',
+            'status' => 'required|in:open,in_progress,resolved',
+            'priority' => 'required|in:low,medium,high',
+            'description' => 'required|min:5',
+            'assigned_specialist' => 'nullable|string'
+        ]);
+
         $m = Ticket::create($data);
         return response()->json($m, 201);
     }
@@ -71,7 +97,11 @@ class TicketController extends Controller
      *   tags={"Tickets"},
      *   summary="Get a ticket by ID",
      *   @OA\Parameter(name="id", in="path", required=true, @OA\Schema(type="integer")),
-     *   @OA\Response(response=200, description="Found"),
+     *   @OA\Response(
+     *     response=200,
+     *     description="Found",
+     *     @OA\JsonContent(ref="#/components/schemas/Ticket")
+     *   ),
      *   @OA\Response(response=404, description="Not found")
      * )
      */
@@ -93,22 +123,46 @@ class TicketController extends Controller
      *   @OA\Parameter(name="id", in="path", required=true, @OA\Schema(type="integer")),
      *   @OA\RequestBody(
      *     required=true,
-     *     @OA\JsonContent(
-     *       @OA\Property(property="status", type="string", enum={"open","in_progress","resolved"}),
-     *       @OA\Property(property="priority", type="string", enum={"low","medium","high"}),
-     *       @OA\Property(property="description", type="string"),
-     *       @OA\Property(property="assigned_specialist", type="string")
-     *     )
+     *     @OA\JsonContent(ref="#/components/schemas/Ticket")
      *   ),
-     *   @OA\Response(response=200, description="Updated"),
+     *   @OA\Response(
+     *     response=200,
+     *     description="Updated",
+     *     @OA\JsonContent(ref="#/components/schemas/Ticket")
+     *   ),
      *   @OA\Response(response=404, description="Not found"),
      *   @OA\Response(response=422, description="Validation error")
      * )
      */
     public function update(Request $r, $id) {
+        // Only users can update
+        /*
+        if ($r->get('role') !== 'user') {
+            return response()->json(['error' => 'Forbidden'], 403);
+        }
+        */
+
+        \Log::info('All: ' . $r);
+
+        $role = $r->attributes->get('role');
+        if ($role !== 'user') {
+            return response()->json(['error' => 'Forbidden'], 403);
+        }
         $m = Ticket::find($id);
-        if(!$m) return response()->json(['error'=>'Not found'], 404);
-        $data = $r->validate([/* rules per Ticket */]);
+        if (!$m) return response()->json(['error' => 'Not found'], 404);
+
+        // Block if ticket is already resolved
+        if ($m->status === 'resolved') {
+            return response()->json(['error' => 'Forbidden: ticket already resolved'], 403);
+        }
+
+        $data = $r->validate([
+            'status' => 'in:open,in_progress,resolved',
+            'priority' => 'in:low,medium,high',
+            'description' => 'min:5',
+            'assigned_specialist' => 'nullable|string'
+        ]);
+
         $m->update($data);
         return response()->json($m, 200);
     }
@@ -118,13 +172,20 @@ class TicketController extends Controller
      *   tags={"Tickets"},
      *   summary="Delete a ticket",
      *   @OA\Parameter(name="id", in="path", required=true, @OA\Schema(type="integer")),
-     *   @OA\Response(response=204, description="Deleted"),
+     *   @OA\Response(response=204, description="Deleted (no content)"),
      *   @OA\Response(response=404, description="Not found")
      * )
      */
-    public function destroy($id) {
+    public function destroy(Request $r, $id) {
+        // Only admins can delete
+        $role = $r->attributes->get('role');
+        if ($role !== 'admin') {
+            return response()->json(['error' => 'You Cant'], 403);
+        }
+
         $m = Ticket::find($id);
-        if(!$m) return response()->json(['error'=>'Not found'], 404);
+        if (!$m) return response()->json(['error' => 'Not found'], 404);
+
         $m->delete();
         return response()->noContent(); // 204
     }

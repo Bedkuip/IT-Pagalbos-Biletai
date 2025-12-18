@@ -2,6 +2,8 @@
 
 return [
 
+    'access_ttl' => env('JWT_ACCESS_TTL', 15), // minutės
+    'refresh_ttl' => env('JWT_REFRESH_TTL', 30), // dienos
     /*
     |--------------------------------------------------------------------------
     | Authentication Defaults
